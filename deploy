@@ -1,0 +1,5 @@
+#!/bin/sh
+cd night-cyc-prototype
+npm run build
+git commit -am'Deploying'
+git push heroku master
