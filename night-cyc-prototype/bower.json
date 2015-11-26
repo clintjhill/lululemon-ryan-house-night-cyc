@@ -1,11 +1,9 @@
 {
-  "name": "foundation-ssg",
+  "name": "lululemon-ryan-house-night-cyc",
   "version": "1.0.0",
-  "authors": [
-    "ZURB <foundation@zurb.com>"
-  ],
-  "description": "Static site generator for Foundation for Sites.",
+  "description": "Web app for signing up to spin. A Lululemon and Ryan House event.",
   "main": "gulpfile.js",
+  "author": "Clint Hill <clint.hill@gmail.com>",
   "license": "MIT",
   "ignore": [
     "**/.*",
