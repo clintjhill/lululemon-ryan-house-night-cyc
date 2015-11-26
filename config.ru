@@ -1,6 +1,6 @@
 use Rack::Static,
   :urls => ["/assets/img", "/assets/js", "/assets/css"],
-  :root => "dist"
+  :root => "night-cyc-prototype/dist"
 
 run lambda { |env|
   [
@@ -9,6 +9,6 @@ run lambda { |env|
       #'Content-Type'  => 'text/html'
       #'Cache-Control' => 'public, max-age=86400'
     },
-    File.open('dist/index.html', File::RDONLY)
+    File.open('night-cyc-prototype/dist/index.html', File::RDONLY)
   ]
 }
