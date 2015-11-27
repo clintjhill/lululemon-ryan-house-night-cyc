@@ -37,5 +37,8 @@
     "url": "https://github.com/clintjhill/lululemon-ryan-house-night-cyc/issues",
     "email": "clint.hill@gmail.com"
   },
-  "private": true
+  "private": true,
+  "dependencies": {
+
+  }
 }

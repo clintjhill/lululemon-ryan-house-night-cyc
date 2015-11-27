@@ -2,10 +2,13 @@ var $        = require('gulp-load-plugins')();
 var argv     = require('yargs').argv;
 var browser  = require('browser-sync');
 var gulp     = require('gulp');
+// var babel    = require("gulp-babel");
 var panini   = require('panini');
 var rimraf   = require('rimraf');
 var sequence = require('run-sequence');
 var sherpa   = require('style-sherpa');
+// var browserify = require('browserify');
+// var source   = require('vinyl-source-stream');
 
 // Check for --production flag
 var isProduction = !!(argv.production);
@@ -51,6 +54,8 @@ var PATHS = {
     'bower_components/foundation-sites/js/foundation.tabs.js',
     'bower_components/foundation-sites/js/foundation.toggler.js',
     'bower_components/foundation-sites/js/foundation.tooltip.js',
+    'node_modules/react/dist/react.js',
+    'node_modules/redux/dist/redux.js',
     'src/assets/js/**/*.js',
     'src/assets/js/app.js'
   ]
@@ -133,10 +138,18 @@ gulp.task('javascript', function() {
   return gulp.src(PATHS.javascript)
     .pipe($.sourcemaps.init())
     .pipe($.concat('app.js'))
+    // .pipe(babel({presets: ["es2015"]}))
     .pipe(uglify)
     .pipe($.if(!isProduction, $.sourcemaps.write()))
     .pipe(gulp.dest('dist/assets/js'));
 });
+
+// gulp.task('browserify', function(){
+//   return browserify('./dist/assets/js/app-non-browsered.js')
+//     .bundle()
+//     .pipe(source('app.js'))
+//     .pipe(gulp.dest('dist/assets/js'));
+// });
 
 // Copy images to the "dist" folder
 // In production, the images are compressed
