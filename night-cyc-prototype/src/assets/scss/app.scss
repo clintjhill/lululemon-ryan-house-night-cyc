@@ -42,7 +42,7 @@
 @include motion-ui-transitions;
 @include motion-ui-animations;
 
-body { font: 1em "Avenir Next"; background:#333; }
+body { background:#333; }
 
 .header.panel {
   margin: 3rem auto 1rem auto;
@@ -51,11 +51,10 @@ body { font: 1em "Avenir Next"; background:#333; }
 
   form{
     padding: 15px;
-    input, select, span{ font: 1rem "Avenir Next"; height: 50px; }
+    input, select, span{ height: 50px; }
     button{ margin-top: 20px; }
     img { margin-bottom: 16px; }
-    p { padding: 1rem; margin: 0; }
-    .switch-label { padding: 8px; }
+    p { padding: 0; margin: 0; }
     .switch-active, .switch-inactive { top: 80%; }
   }
 
@@ -69,6 +68,12 @@ body { font: 1em "Avenir Next"; background:#333; }
       font-size: 75%;
       font-weight: bold;
     }
+  }
+
+  p + .stat {
+    margin-top: -2.5rem;
+    margin-bottom: 2rem;
+    text-align: center;
   }
 
   .sign {

@@ -17,7 +17,20 @@
           <div class="sign">
             <h1>Ryan House Night Cyc</h1>
           </div>
-          <p><span>Are you ready to spin?</span> Crystal will tell me what we should put here. It should include some instructions on the form below and a description of the event.</p>
+          <p>
+            <span>Are you ready to spin?</span>
+            Crystal will tell me what we should put here. It should include some instructions on the form below and a description of the event.
+          </p>
+          <ul class="no-bullet">
+            <li>
+              <p class="lead">There will be 400 bikes:</p>
+              <div class="stat bikes-left"></div>
+            </li>
+            <li>
+              <p class="lead">There will be 40 front row bikes:</p>
+              <div class="stat front-row-bikes-left"></div>
+            </li>
+          </ul>
         </div>
       
       </div>
@@ -55,26 +68,9 @@
               </div>
             </div>
       
-            <div class="row collapse">
-              <div class="small-6 columns">
-                <p class="switch-label">Want front rows?</p>
-              </div>
-              <div class="small-6 columns">
-                 <div class="switch large">
-                   <input class="switch-input" id="yes-no" type="checkbox" name="front-row">
-                   <label class="switch-paddle" for="yes-no">
-                     <span class="switch-active" aria-hidden="true">Yes</span>
-                     <span class="switch-inactive" aria-hidden="true">No</span>
-                   </label>
-                 </div>
-              </div>
-            </div>
-      
             <div class="row">
               <div class="small-12 columns">
-                <p class="switch-label">
-                  Pick the spin class:
-                </p>
+                <p>Pick the spin class:</p>
                 <ul class="button-group toggle" data-toggle="buttons-radio">
                   <li>
                     <input type="radio" id="the-madison" name="spin-class" data-toggle="button" required>
@@ -92,6 +88,21 @@
               </div>
             </div>
       
+            <div class="front-row-bikes row">
+              <div class="small-6 columns">
+                <p>Want front row?</p>
+              </div>
+              <div class="small-6 columns">
+                 <div class="switch large">
+                   <input class="switch-input" id="yes-no" type="checkbox" name="front-row">
+                   <label class="switch-paddle" for="yes-no">
+                     <span class="switch-active" aria-hidden="true">Yes</span>
+                     <span class="switch-inactive" aria-hidden="true">No</span>
+                   </label>
+                 </div>
+              </div>
+            </div>
+      
             <div class="row collapse">
               <div class="small-12  columns">
                 <input type="tel" id="donation" name="donation" placeholder="Donation" required>
@@ -106,7 +117,7 @@
             
             <div class="row collapse">
               <div class="small-12 columns">
-                <input type="tel" id="credit-card" name="credit-card" placeholder="Card Number" autocomplete="off" maxlength="20" pattern="card">
+                <input type="tel" id="credit-card" name="credit-card" placeholder="Card Number" autocomplete="off" maxlength="20" required pattern="card">
               </div>
             </div>
             

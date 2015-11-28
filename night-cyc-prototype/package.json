@@ -39,6 +39,6 @@
   },
   "private": true,
   "dependencies": {
-
+    "parse": "^1.6.9"
   }
 }
