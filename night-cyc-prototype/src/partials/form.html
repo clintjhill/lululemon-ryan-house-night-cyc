@@ -13,31 +13,10 @@
       </div>
 
       <div class="row collapse">
-        <div class="small-12 columns">
-            <select name="bike-type" id="bike-type" required>
-              <option value="">Bike Type</option>
-              <option value="front-row">Front Row</option>
-              <option value="regular">Regular</option>
-            </select>
-        </div>
-      </div>
-
-      <div class="row collapse">
-        <div class="small-12 columns">
-            <select name="class-instruction" id="class-instruction" required>
-              <option value="">Class Instruction</option>
-              <option value="madison">The Madison</option>
-              <option value="studio-360">Studio 360</option>
-              <option value="RPM Spin">RPM Spin</option>
-            </select>
-        </div>
-      </div>
-
-      <div class="row collapse">
-        <div class="small-7 columns">
+        <div class="small-6 columns">
           <p class="switch-label">Want front rows?</p>
         </div>
-        <div class="small-4 columns">
+        <div class="small-6 columns">
            <div class="switch large">
              <input class="switch-input" id="yes-no" type="checkbox" name="front-row">
              <label class="switch-paddle" for="yes-no">
@@ -48,75 +27,35 @@
         </div>
       </div>
 
+      <div class="row">
+        <div class="small-12 columns">
+          <p class="switch-label">
+            Pick the spin class:
+          </p>
+          <ul class="button-group toggle" data-toggle="buttons-radio">
+            <li>
+              <input type="radio" id="the-madison" name="spin-class" data-toggle="button" required>
+              <label class="button" for="the-madison">The Madison</label>
+            </li>
+            <li>
+              <input type="radio" id="studio-360" name="spin-class" data-toggle="button">
+              <label class="button" for="studio-360">Studio 360</label>
+            </li>
+            <li>
+              <input type="radio" id="rpm-spin" name="spin-class" data-toggle="button">
+              <label class="button" for="rpm-spin">RPM Spin</label>
+            </li>
+          </ul>
+        </div>
+      </div>
+
       <div class="row collapse">
         <div class="small-12  columns">
           <input type="tel" id="donation" name="donation" placeholder="Donation" required>
         </div>
       </div>
 
-      <div class="row collapse">
-        <div class="small-12 columns">
-          <input type="text" id="cardholder-name" name="cardholder-name" placeholder="Cardholder Name" required>
-        </div>
-      </div>
-
-      <div class="row collapse">
-        <div class="small-12 columns">
-          <input type="tel" id="credit-card" name="credit-card" placeholder="Card Number" autocomplete="off" maxlength="20" required>
-        </div>
-      </div>
-
-      <div class="row">
-        <div class="small-12 columns">
-          <img src="https://bbox.blackbaudhosting.com/webforms/images/cards/visa_normal.png">
-          <img src="https://bbox.blackbaudhosting.com/webforms/images/cards/amex_normal.png">
-          <img src="https://bbox.blackbaudhosting.com/webforms/images/cards/discover_normal.png">
-          <img src="https://bbox.blackbaudhosting.com/webforms/images/cards/mastercard_normal.png">
-        </div>
-      </div>
-
-      <div class="row">
-        <div class="small-12 large-4 columns">
-          <select class="" id="card-month" name="card-month" required>
-            <option value="">Month</option>
-            <option value="1">01</option>
-            <option value="2">02</option>
-            <option value="3">03</option>
-            <option value="4">04</option>
-            <option value="5">05</option>
-            <option value="6">06</option>
-            <option value="7">07</option>
-            <option value="8">08</option>
-            <option value="9">09</option>
-            <option value="10">10</option>
-            <option value="11">11</option>
-            <option value="12">12</option>
-          </select>
-        </div>
-        <div class="small-12 large-4 columns">
-          <select class="" id="card-year" name="card-year" required>
-           <option value="">Year</option>
-           <option value="2015">2015</option>
-           <option value="2016">2016</option>
-           <option value="2017">2017</option>
-           <option value="2018">2018</option>
-           <option value="2019">2019</option>
-           <option value="2020">2020</option>
-           <option value="2021">2021</option>
-           <option value="2022">2022</option>
-           <option value="2023">2023</option>
-           <option value="2024">2024</option>
-           <option value="2025">2025</option>
-           <option value="2026">2026</option>
-           <option value="2027">2027</option>
-           <option value="2028">2028</option>
-           <option value="2029">2029</option>
-          </select>
-        </div>
-        <div class="small-12 large-4 columns">
-          <input type="tel" id="card-csc" name="card-csc" placeholder="CSC" required>
-        </div>
-      </div>
+      {{> credit-card}}
 
       <div class="row collapse">
         <button type="submit" name="submit-signup" class="button">Sign Up</button>

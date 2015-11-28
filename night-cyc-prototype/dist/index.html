@@ -56,31 +56,10 @@
             </div>
       
             <div class="row collapse">
-              <div class="small-12 columns">
-                  <select name="bike-type" id="bike-type" required>
-                    <option value="">Bike Type</option>
-                    <option value="front-row">Front Row</option>
-                    <option value="regular">Regular</option>
-                  </select>
-              </div>
-            </div>
-      
-            <div class="row collapse">
-              <div class="small-12 columns">
-                  <select name="class-instruction" id="class-instruction" required>
-                    <option value="">Class Instruction</option>
-                    <option value="madison">The Madison</option>
-                    <option value="studio-360">Studio 360</option>
-                    <option value="RPM Spin">RPM Spin</option>
-                  </select>
-              </div>
-            </div>
-      
-            <div class="row collapse">
-              <div class="small-7 columns">
+              <div class="small-6 columns">
                 <p class="switch-label">Want front rows?</p>
               </div>
-              <div class="small-4 columns">
+              <div class="small-6 columns">
                  <div class="switch large">
                    <input class="switch-input" id="yes-no" type="checkbox" name="front-row">
                    <label class="switch-paddle" for="yes-no">
@@ -88,6 +67,28 @@
                      <span class="switch-inactive" aria-hidden="true">No</span>
                    </label>
                  </div>
+              </div>
+            </div>
+      
+            <div class="row">
+              <div class="small-12 columns">
+                <p class="switch-label">
+                  Pick the spin class:
+                </p>
+                <ul class="button-group toggle" data-toggle="buttons-radio">
+                  <li>
+                    <input type="radio" id="the-madison" name="spin-class" data-toggle="button" required>
+                    <label class="button" for="the-madison">The Madison</label>
+                  </li>
+                  <li>
+                    <input type="radio" id="studio-360" name="spin-class" data-toggle="button">
+                    <label class="button" for="studio-360">Studio 360</label>
+                  </li>
+                  <li>
+                    <input type="radio" id="rpm-spin" name="spin-class" data-toggle="button">
+                    <label class="button" for="rpm-spin">RPM Spin</label>
+                  </li>
+                </ul>
               </div>
             </div>
       
@@ -102,13 +103,13 @@
                 <input type="text" id="cardholder-name" name="cardholder-name" placeholder="Cardholder Name" required>
               </div>
             </div>
-      
+            
             <div class="row collapse">
               <div class="small-12 columns">
-                <input type="tel" id="credit-card" name="credit-card" placeholder="Card Number" autocomplete="off" maxlength="20" required>
+                <input type="tel" id="credit-card" name="credit-card" placeholder="Card Number" autocomplete="off" maxlength="20" pattern="card">
               </div>
             </div>
-      
+            
             <div class="row">
               <div class="small-12 columns">
                 <img src="https://bbox.blackbaudhosting.com/webforms/images/cards/visa_normal.png">
@@ -117,7 +118,7 @@
                 <img src="https://bbox.blackbaudhosting.com/webforms/images/cards/mastercard_normal.png">
               </div>
             </div>
-      
+            
             <div class="row">
               <div class="small-12 large-4 columns">
                 <select class="" id="card-month" name="card-month" required>
@@ -160,6 +161,7 @@
                 <input type="tel" id="card-csc" name="card-csc" placeholder="CSC" required>
               </div>
             </div>
+            
       
             <div class="row collapse">
               <button type="submit" name="submit-signup" class="button">Sign Up</button>

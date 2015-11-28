@@ -226,7 +226,7 @@ $breadcrumbs-item-slash: true;
 $button-padding: 0.85em 1em;
 $button-margin: 0 $global-margin $global-margin 0;
 $button-fill: solid;
-$button-background: $primary-color;
+$button-background: $secondary-color;//$primary-color;
 $button-background-hover: scale-color($button-background, $lightness: -15%);
 $button-color: #fff;
 $button-color-alt: #000;
@@ -452,7 +452,7 @@ $slider-transition: all 0.2s ease-in-out;
 // 29. Switch
 // ----------
 
-$switch-background: $medium-gray;
+$switch-background: $secondary-color;//$medium-gray;
 $switch-background-active: $primary-color;
 $switch-height: 2rem;
 $switch-height-tiny: 1.5rem;

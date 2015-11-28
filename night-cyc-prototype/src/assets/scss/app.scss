@@ -93,8 +93,30 @@ body { font: 1em "Avenir Next"; background:#333; }
 }
 
 .map {
+  margin-top: -1rem;
   padding: 0 2rem 2rem 2rem;
-  iframe {
-    width: 100%;
-  }
+  iframe { width: 100%; }
+}
+
+input[data-toggle] {
+  display: none;
+}
+
+ul.button-group {
+  margin-left: 0;
+}
+
+.button-group li {
+  display: inline-block;
+}
+
+.button-group .button {
+  margin-right: -0.1rem;
+}
+
+input[data-toggle]:checked + label,
+input[data-toggle]:checked + label:active {
+  background-color: $primary-color;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.15) inset,
+              0 1px 2px rgba(0, 0, 0, 0.05);
 }
