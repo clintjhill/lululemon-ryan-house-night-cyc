@@ -27,12 +27,25 @@
               <div class="stat bikes-left"></div>
             </li>
             <li>
-              <p class="lead">There will be 40 front row bikes:</p>
+              <p class="lead">We'll have 40 front row bikes:</p>
               <div class="stat front-row-bikes-left"></div>
+            </li>
+            <li>
+              <p class="lead">Our goal is:</p>
+              <div class="stat goal-amount"></div>
+            </li>
+            <li>
+              <p class="lead">So far we have raised:</p>
+              <div class="stat raised-so-far"></div>
+              <div class="progress">
+                <span class="progress-meter" style="width: 0%">
+                  <p class="progress-meter-text"></p>
+                </span>
+              </div>
             </li>
           </ul>
         </div>
-      
+        
       </div>
       
       <div class="large-6 columns">
@@ -60,11 +73,11 @@
           <div class="sign">
             <h1>Sign up to Spin</h1>
           </div>
-          <form data-abide novalidate>
+          <form id="sign-up" data-abide novalidate>
       
             <div class="row collapse">
               <div class="small-12  columns">
-                <input type="text" id="email" name="email" placeholder="Email" required>
+                <input type="text" id="email" name="email" placeholder="Email" required pattern="email">
               </div>
             </div>
       
@@ -105,7 +118,7 @@
       
             <div class="row collapse">
               <div class="small-12  columns">
-                <input type="tel" id="donation" name="donation" placeholder="Donation" required>
+                <input type="text" id="donation" name="donation" placeholder="Donation" required pattern="number">
               </div>
             </div>
       
@@ -117,7 +130,7 @@
             
             <div class="row collapse">
               <div class="small-12 columns">
-                <input type="tel" id="credit-card" name="credit-card" placeholder="Card Number" autocomplete="off" maxlength="20" required pattern="card">
+                <input type="text" id="credit-card" name="credit-card" placeholder="Card Number" autocomplete="off" maxlength="20" required pattern="card">
               </div>
             </div>
             
@@ -169,7 +182,7 @@
                 </select>
               </div>
               <div class="small-12 large-4 columns">
-                <input type="tel" id="card-csc" name="card-csc" placeholder="CSC" required>
+                <input type="text" id="card-csc" name="card-csc" placeholder="CSC" required pattern="cvv">
               </div>
             </div>
             

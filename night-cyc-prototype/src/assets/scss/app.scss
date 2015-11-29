@@ -71,7 +71,7 @@ img.credit-card { margin-bottom: 16px; }
   }
 
   p + .stat {
-    margin-top: -2.5rem;
+    margin-top: -2rem;
     margin-bottom: 2rem;
     text-align: center;
   }
@@ -124,4 +124,16 @@ input[data-toggle]:checked + label:active {
   background-color: $primary-color;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.15) inset,
               0 1px 2px rgba(0, 0, 0, 0.05);
+}
+
+.raised-so-far{
+  color: $success-color;
+}
+
+.progress {
+  margin: 0 2em;
+  p.progress-meter-text {
+    padding: 0;
+    margin: 0;
+  }
 }

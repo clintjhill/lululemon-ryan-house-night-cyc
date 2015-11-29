@@ -4,11 +4,11 @@
     <div class="sign">
       <h1>Sign up to Spin</h1>
     </div>
-    <form data-abide novalidate>
+    <form id="sign-up" data-abide novalidate>
 
       <div class="row collapse">
         <div class="small-12  columns">
-          <input type="text" id="email" name="email" placeholder="Email" required>
+          <input type="text" id="email" name="email" placeholder="Email" required pattern="email">
         </div>
       </div>
 
@@ -49,7 +49,7 @@
 
       <div class="row collapse">
         <div class="small-12  columns">
-          <input type="tel" id="donation" name="donation" placeholder="Donation" required>
+          <input type="text" id="donation" name="donation" placeholder="Donation" required pattern="number">
         </div>
       </div>
 
