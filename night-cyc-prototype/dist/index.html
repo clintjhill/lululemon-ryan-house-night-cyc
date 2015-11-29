@@ -86,15 +86,15 @@
                 <p>Pick the spin class:</p>
                 <ul class="button-group toggle" data-toggle="buttons-radio">
                   <li>
-                    <input type="radio" id="the-madison" name="spin-class" data-toggle="button" required>
+                    <input type="radio" id="the-madison" name="spin-class" value="the-madison" data-toggle="button" required>
                     <label class="button" for="the-madison">The Madison</label>
                   </li>
                   <li>
-                    <input type="radio" id="studio-360" name="spin-class" data-toggle="button">
+                    <input type="radio" id="studio-360" name="spin-class" value="studio-360" data-toggle="button">
                     <label class="button" for="studio-360">Studio 360</label>
                   </li>
                   <li>
-                    <input type="radio" id="rpm-spin" name="spin-class" data-toggle="button">
+                    <input type="radio" id="rpm-spin" name="spin-class" value="rpm-spin" data-toggle="button">
                     <label class="button" for="rpm-spin">RPM Spin</label>
                   </li>
                 </ul>
@@ -145,7 +145,7 @@
             
             <div class="row">
               <div class="small-12 large-4 columns">
-                <select class="" id="card-month" name="card-month" required>
+                <select id="card-month" name="card-month" required>
                   <option value="">Month</option>
                   <option value="1">01</option>
                   <option value="2">02</option>
@@ -162,7 +162,7 @@
                 </select>
               </div>
               <div class="small-12 large-4 columns">
-                <select class="" id="card-year" name="card-year" required>
+                <select id="card-year" name="card-year" required>
                  <option value="">Year</option>
                  <option value="2015">2015</option>
                  <option value="2016">2016</option>
@@ -188,7 +188,15 @@
             
       
             <div class="row collapse">
-              <button type="submit" name="submit-signup" class="button">Sign Up</button>
+              <div class="small-4 columns">
+                <button type="submit" name="submit-signup" class="button">Sign Up</button>
+              </div>
+              <div class="small-8 columns">
+                <div data-abide-error class="alert callout small" style="display: none">
+                  <p>Uh oh. Missing things.</p>
+                </div>
+              </div>
+      
             </div>
       
           </form>

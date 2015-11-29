@@ -17,15 +17,15 @@
           <p>Pick the spin class:</p>
           <ul class="button-group toggle" data-toggle="buttons-radio">
             <li>
-              <input type="radio" id="the-madison" name="spin-class" data-toggle="button" required>
+              <input type="radio" id="the-madison" name="spin-class" value="the-madison" data-toggle="button" required>
               <label class="button" for="the-madison">The Madison</label>
             </li>
             <li>
-              <input type="radio" id="studio-360" name="spin-class" data-toggle="button">
+              <input type="radio" id="studio-360" name="spin-class" value="studio-360" data-toggle="button">
               <label class="button" for="studio-360">Studio 360</label>
             </li>
             <li>
-              <input type="radio" id="rpm-spin" name="spin-class" data-toggle="button">
+              <input type="radio" id="rpm-spin" name="spin-class" value="rpm-spin" data-toggle="button">
               <label class="button" for="rpm-spin">RPM Spin</label>
             </li>
           </ul>
@@ -56,7 +56,15 @@
       {{> credit-card}}
 
       <div class="row collapse">
-        <button type="submit" name="submit-signup" class="button">Sign Up</button>
+        <div class="small-4 columns">
+          <button type="submit" name="submit-signup" class="button">Sign Up</button>
+        </div>
+        <div class="small-8 columns">
+          <div data-abide-error class="alert callout small" style="display: none">
+            <p>Uh oh. Missing things.</p>
+          </div>
+        </div>
+
       </div>
 
     </form>

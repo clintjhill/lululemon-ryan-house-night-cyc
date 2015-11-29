@@ -9,13 +9,13 @@ var EventInformation = Parse.Object.extend("EventInformation", {
     return parseInt(this.get("totalAmountRaised"), 10);
   },
   raisedSoFarFormatted: function(){
-    return this.raisedSoFar().toLocaleString('en-US', {style: 'currency', currency: 'USD'});
+    return accounting.formatMoney(this.raisedSoFar());
   },
   goal: function(){
     return parseInt(this.get("totalAmountGoal"), 10);
   },
   goalFormatted: function(){
-    return this.goal().toLocaleString('en-US', {style: 'currency', currency: 'USD'});
+    return accounting.formatMoney(this.goal());
   },
   goalPercentage: function(){
     var raised = this.get("totalAmountRaised");

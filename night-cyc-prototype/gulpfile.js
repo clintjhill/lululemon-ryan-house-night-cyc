@@ -2,13 +2,10 @@ var $        = require('gulp-load-plugins')();
 var argv     = require('yargs').argv;
 var browser  = require('browser-sync');
 var gulp     = require('gulp');
-// var babel    = require("gulp-babel");
 var panini   = require('panini');
 var rimraf   = require('rimraf');
 var sequence = require('run-sequence');
 var sherpa   = require('style-sherpa');
-// var browserify = require('browserify');
-// var source   = require('vinyl-source-stream');
 
 // Check for --production flag
 var isProduction = !!(argv.production);
@@ -137,18 +134,10 @@ gulp.task('javascript', function() {
   return gulp.src(PATHS.javascript)
     .pipe($.sourcemaps.init())
     .pipe($.concat('app.js'))
-    // .pipe(babel({presets: ["es2015"]}))
     .pipe(uglify)
     .pipe($.if(!isProduction, $.sourcemaps.write()))
     .pipe(gulp.dest('dist/assets/js'));
 });
-
-// gulp.task('browserify', function(){
-//   return browserify('./dist/assets/js/app-non-browsered.js')
-//     .bundle()
-//     .pipe(source('app.js'))
-//     .pipe(gulp.dest('dist/assets/js'));
-// });
 
 // Copy images to the "dist" folder
 // In production, the images are compressed
