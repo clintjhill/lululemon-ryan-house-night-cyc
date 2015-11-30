@@ -10,16 +10,18 @@ var setEventInformation = function(eventInfo){
   $(".progress-meter").css({width: eventInfo.goalPercentage()});
   $(".progress-meter-text").html(eventInfo.goalPercentage());
 
-  if(eventInfo.bikesLeft() > 0) {
-    $(".bikes-left").html(eventInfo.bikesLeft() + " left!");
-    if(eventInfo.frontRowBikesLeft() > 0){
-      $(".front-row-bikes-left").html(eventInfo.frontRowBikesLeft() + " left!");
+  if($(".bikes-left").length > 0){ // if it's on the page
+    if(eventInfo.bikesLeft() > 0) { // if they're not sold out
+      $(".bikes-left").html(eventInfo.bikesLeft() + " left!");
+      if(eventInfo.frontRowBikesLeft() > 0){
+        $(".front-row-bikes-left").html(eventInfo.frontRowBikesLeft() + " left!");
+      } else {
+        $(".front-row-bikes-left").html("Sold Out!");
+      }
     } else {
+      $(".bikes-left").html("Sold Out!");
       $(".front-row-bikes-left").html("Sold Out!");
     }
-  } else {
-    $(".bikes-left").html("Sold Out!");
-    $(".front-row-bikes-left").html("Sold Out!");
   }
 }
 
@@ -55,7 +57,7 @@ var saveSignUp = function(signUp){
   su.save(signUp, {
     success: function(signedUp){
       updateEventInformation(signUp);
-      console.log("Saved!", signedUp);
+      window.location = "thanks.html?id=" + signedUp.id
     },
     error: function(signedUp, error){
       console.log("Failed", error, signedUp);
