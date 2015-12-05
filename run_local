@@ -1,0 +1,4 @@
+#!/bin/bash
+heroku local
+cd night-cyc-prototype
+npm start
