@@ -1,44 +1,35 @@
 <div class="row collapse">
   <div class="small-12 columns">
-    <input type="text" id="cardholder-name" name="cardholder-name" placeholder="Cardholder Name" required>
+    <input type="text" id="cardholder-name" name="cardholder-name" placeholder="Cardholder Name" data-stripe="name" required>
   </div>
 </div>
 
 <div class="row collapse">
   <div class="small-12 columns">
-    <input type="text" id="credit-card" name="credit-card" placeholder="Card Number" autocomplete="off" maxlength="20" required pattern="card">
-  </div>
-</div>
-
-<div class="row">
-  <div class="small-12 columns">
-    <img class="credit-card" src="https://bbox.blackbaudhosting.com/webforms/images/cards/visa_normal.png">
-    <img class="credit-card" src="https://bbox.blackbaudhosting.com/webforms/images/cards/amex_normal.png">
-    <img class="credit-card" src="https://bbox.blackbaudhosting.com/webforms/images/cards/discover_normal.png">
-    <img class="credit-card" src="https://bbox.blackbaudhosting.com/webforms/images/cards/mastercard_normal.png">
+    <input type="text" id="credit-card" name="credit-card" placeholder="Card Number" autocomplete="off" maxlength="20" data-stripe="number" required pattern="card">
   </div>
 </div>
 
 <div class="row">
   <div class="small-12 large-4 columns">
-    <select id="card-month" name="card-month" required>
+    <select id="card-month" name="card-month" data-stripe="exp_month" required>
       <option value="">Month</option>
-      <option value="1">01</option>
-      <option value="2">02</option>
-      <option value="3">03</option>
-      <option value="4">04</option>
-      <option value="5">05</option>
-      <option value="6">06</option>
-      <option value="7">07</option>
-      <option value="8">08</option>
-      <option value="9">09</option>
+      <option value="01">01</option>
+      <option value="02">02</option>
+      <option value="03">03</option>
+      <option value="04">04</option>
+      <option value="05">05</option>
+      <option value="06">06</option>
+      <option value="07">07</option>
+      <option value="08">08</option>
+      <option value="09">09</option>
       <option value="10">10</option>
       <option value="11">11</option>
       <option value="12">12</option>
     </select>
   </div>
   <div class="small-12 large-4 columns">
-    <select id="card-year" name="card-year" required>
+    <select id="card-year" name="card-year" data-stripe="exp_year" required>
      <option value="">Year</option>
      <option value="2015">2015</option>
      <option value="2016">2016</option>
@@ -58,6 +49,6 @@
     </select>
   </div>
   <div class="small-12 large-4 columns">
-    <input type="text" id="card-csc" name="card-csc" placeholder="CSC" required pattern="cvv">
+    <input type="text" id="card-csc" name="card-csc" placeholder="CVC" data-stripe="cvc" required pattern="cvv">
   </div>
 </div>

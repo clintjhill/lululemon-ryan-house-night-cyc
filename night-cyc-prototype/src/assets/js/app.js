@@ -1,4 +1,5 @@
 Parse.initialize('oHvIaEjqPA5s3QiQ2DYtT6TxXBhOU97V1EzMptQD', 'c3IeV15NBVtpKgISMbUqKmsu1M2VpV5DoxCseKRS');
+Stripe.setPublishableKey('pk_test_mnb2K52AawVfeFUmcuEV7CjJ');
 
 var eventInfoQuery = new Parse.Query("EventInformation");
 var eventInformation;
@@ -51,13 +52,18 @@ var createSignUpFromForm = function(){
   }
 }
 
+var stripeResponseHandler = function(status, response){
+  console.log("Stripe", status, response);
+}
+
 var saveSignUp = function(signUp){
   var SignUp = Parse.Object.extend("SignUp");
   var su = new SignUp();
   su.save(signUp, {
     success: function(signedUp){
       updateEventInformation(signUp);
-      window.location = "thanks.html?id=" + signedUp.id
+      Stripe.card.createToken($("form#sign-up"), stripeResponseHandler);
+      //window.location = "thanks.html?id=" + signedUp.id
     },
     error: function(signedUp, error){
       console.log("Failed", error, signedUp);
@@ -67,6 +73,8 @@ var saveSignUp = function(signUp){
 
 var signup = function(evt){
   evt.preventDefault();
+  $(this).find('button').prop('disabled', true);
+
   if(validForm()){
     var signUp = createSignUpFromForm();
     saveSignUp(signUp);
