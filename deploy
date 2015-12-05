@@ -1,5 +1,6 @@
-#!/bin/sh
+#!/bin/bash
 cd night-cyc-prototype
 npm run build
-git commit -am'Deploying'
+COMMIT="$(git log -1 --oneline --grep='[^Deploying]')"
+git commit -am'Deploying: $COMMIT'
 git push heroku master
