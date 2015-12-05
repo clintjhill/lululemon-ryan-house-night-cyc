@@ -1,4 +1,4 @@
 #!/bin/bash
-heroku local
+bundle exec rackup > /dev/null &
 cd night-cyc-prototype
 npm start

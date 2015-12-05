@@ -6,7 +6,7 @@ var EventInformation = Parse.Object.extend("EventInformation", {
     return 40 - parseInt(this.get("frontRowBikes"), 10);
   },
   raisedSoFar: function(){
-    return parseInt(this.get("totalAmountRaisedInCents"), 10);
+    return parseInt(this.get("totalAmountRaisedInCents"), 10) / 100; // converted from cents to dollars
   },
   raisedSoFarFormatted: function(){
     return accounting.formatMoney(this.raisedSoFar());

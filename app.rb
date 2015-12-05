@@ -10,7 +10,7 @@ get '/' do
   send_file './night-cyc-prototype/dist/index.html'
 end
 
-post '/donation' do
+post '/api/donation' do
   begin
     charge = Stripe::Charge.create(
       :amount => params["donation"],

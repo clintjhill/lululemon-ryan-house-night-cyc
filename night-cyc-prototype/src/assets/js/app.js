@@ -4,6 +4,9 @@ Stripe.setPublishableKey('pk_test_mnb2K52AawVfeFUmcuEV7CjJ');
 var eventInfoQuery = new Parse.Query("EventInformation");
 var eventInformation;
 
+/**
+* Sets the event information in the view. Not up to Parse.
+*/
 var setEventInformation = function(eventInfo){
   eventInformation = eventInfo; // make it globally available
   $(".raised-so-far").html(eventInfo.raisedSoFarFormatted());
@@ -26,8 +29,11 @@ var setEventInformation = function(eventInfo){
   }
 }
 
+/**
+* Updates the event information up to Parse.
+*/
 var updateEventInformation = function(signUp){
-  var newAmount = eventInformation.get("totalAmountRaisedInCents") + signUp.donationAmount;
+  var newAmount = eventInformation.get("totalAmountRaisedInCents") + signUp.donationAmountInCents;
   eventInformation.set("totalAmountRaisedInCents", newAmount);
   eventInformation.increment("participants");
   if(signUp.frontRow){
@@ -82,8 +88,12 @@ var createPayment = function(token){
 var handleTokenResponseAndMakePayment = function(status, response){
   if(status === 200){
     var token = response.id;
-    $.post('/donation', createPayment(token), function(response){
-      console.log("Paid", response);
+    $.post('/api/donation', createPayment(token), function(response){
+      if(response.status == "succeeded" || response.paid == true){
+        console.log("Paid", response);
+      } else {
+        console.log("Failed", response);
+      }
     });
   } else {
     console.log("Failed", status, response);
