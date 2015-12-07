@@ -7,6 +7,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Ryan House Night Cyc!</title>
     <link rel="stylesheet" href="assets/css/app.css">
+    <script type="text/javascript" src="https://js.stripe.com/v2/"></script>
   </head>
   <body>
 
@@ -53,10 +54,18 @@
           <div class="sign">
             <h1>The amazing location</h1>
           </div>
-          <p><span>Beats, lights - party!</span> Crystal will tell me what we should put here. It should include some instructions on the form below and a description of the event.</p>
+          <p><span>Beats, lights - party!</span> This event will be at the Open Air Market in downtown Phoenix.</p>
+          <div class="row">
+            <div class="large-6 columns">
+              <p><a href="http://phxpublicmarket.com/openair/"><img src="assets/img/openairlogo23.png" alt="Open Air Market, Phoenix Public Market" /></a></p>
+            </div>
+            <div class="large-6 columns">
+              <p>721 N Central Avenue (Central and McKinley) <br>(602) 625-6736 <br><a href="http://phxpublicmarket.com/openair/">Website</a></p>
+            </div>
+          </div>
       
-          <div class="map">
-            <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3322.0354436057514!2d-112.35834168383208!3d33.63032298072276!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x872b44b8b57b62a9%3A0x62100d2ef07abc9f!2s16108+N+137th+Dr%2C+Surprise%2C+AZ+85374!5e0!3m2!1sen!2sus!4v1448468858930"
+          <div class="row map">
+            <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3328.740818840047!2d-112.07572718480047!3d33.45605588077233!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x872b123d17000d51%3A0x6cf63b7aec973456!2s721+N+Central+Ave%2C+Phoenix%2C+AZ+85004!5e1!3m2!1sen!2sus!4v1449423664444"
               frameborder="0"
               style="border:0"
               allowfullscreen></iframe>
@@ -94,8 +103,8 @@
                     <label class="button" for="studio-360">Studio 360</label>
                   </li>
                   <li>
-                    <input type="radio" id="rpm-spin" name="spin-class" value="rpm-spin" data-toggle="button">
-                    <label class="button" for="rpm-spin">RPM Spin</label>
+                    <input type="radio" id="lulu-sponsored" name="spin-class" value="lulu-sponsored" data-toggle="button">
+                    <label class="button" for="rpm-spin">Lululemon Sponsored</label>
                   </li>
                 </ul>
               </div>
@@ -124,45 +133,36 @@
       
             <div class="row collapse">
               <div class="small-12 columns">
-                <input type="text" id="cardholder-name" name="cardholder-name" placeholder="Cardholder Name" required>
+                <input type="text" id="cardholder-name" name="cardholder-name" placeholder="Cardholder Name" data-stripe="name" required>
               </div>
             </div>
             
             <div class="row collapse">
               <div class="small-12 columns">
-                <input type="text" id="credit-card" name="credit-card" placeholder="Card Number" autocomplete="off" maxlength="20" required pattern="card">
-              </div>
-            </div>
-            
-            <div class="row">
-              <div class="small-12 columns">
-                <img class="credit-card" src="https://bbox.blackbaudhosting.com/webforms/images/cards/visa_normal.png">
-                <img class="credit-card" src="https://bbox.blackbaudhosting.com/webforms/images/cards/amex_normal.png">
-                <img class="credit-card" src="https://bbox.blackbaudhosting.com/webforms/images/cards/discover_normal.png">
-                <img class="credit-card" src="https://bbox.blackbaudhosting.com/webforms/images/cards/mastercard_normal.png">
+                <input type="text" id="credit-card" name="credit-card" placeholder="Card Number" autocomplete="off" maxlength="20" data-stripe="number" required pattern="card">
               </div>
             </div>
             
             <div class="row">
               <div class="small-12 large-4 columns">
-                <select id="card-month" name="card-month" required>
+                <select id="card-month" name="card-month" data-stripe="exp_month" required>
                   <option value="">Month</option>
-                  <option value="1">01</option>
-                  <option value="2">02</option>
-                  <option value="3">03</option>
-                  <option value="4">04</option>
-                  <option value="5">05</option>
-                  <option value="6">06</option>
-                  <option value="7">07</option>
-                  <option value="8">08</option>
-                  <option value="9">09</option>
+                  <option value="01">01</option>
+                  <option value="02">02</option>
+                  <option value="03">03</option>
+                  <option value="04">04</option>
+                  <option value="05">05</option>
+                  <option value="06">06</option>
+                  <option value="07">07</option>
+                  <option value="08">08</option>
+                  <option value="09">09</option>
                   <option value="10">10</option>
                   <option value="11">11</option>
                   <option value="12">12</option>
                 </select>
               </div>
               <div class="small-12 large-4 columns">
-                <select id="card-year" name="card-year" required>
+                <select id="card-year" name="card-year" data-stripe="exp_year" required>
                  <option value="">Year</option>
                  <option value="2015">2015</option>
                  <option value="2016">2016</option>
@@ -182,7 +182,7 @@
                 </select>
               </div>
               <div class="small-12 large-4 columns">
-                <input type="text" id="card-csc" name="card-csc" placeholder="CSC" required pattern="cvv">
+                <input type="text" id="card-csc" name="card-csc" placeholder="CVC" data-stripe="cvc" required pattern="cvv">
               </div>
             </div>
             

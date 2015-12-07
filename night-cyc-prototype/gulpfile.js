@@ -31,28 +31,11 @@ var PATHS = {
     'bower_components/what-input/what-input.js',
     'bower_components/foundation-sites/js/foundation.core.js',
     'bower_components/foundation-sites/js/foundation.util.*.js',
-    // Paths to individual JS components defined below
     'bower_components/foundation-sites/js/foundation.abide.js',
-    // 'bower_components/foundation-sites/js/foundation.accordion.js',
-    // 'bower_components/foundation-sites/js/foundation.accordionMenu.js',
-    // 'bower_components/foundation-sites/js/foundation.drilldown.js',
-    // 'bower_components/foundation-sites/js/foundation.dropdown.js',
-    // 'bower_components/foundation-sites/js/foundation.dropdownMenu.js',
-    // 'bower_components/foundation-sites/js/foundation.equalizer.js',
-    // 'bower_components/foundation-sites/js/foundation.interchange.js',
-    // 'bower_components/foundation-sites/js/foundation.magellan.js',
-    // 'bower_components/foundation-sites/js/foundation.offcanvas.js',
-    // 'bower_components/foundation-sites/js/foundation.orbit.js',
-    // 'bower_components/foundation-sites/js/foundation.responsiveMenu.js',
-    // 'bower_components/foundation-sites/js/foundation.responsiveToggle.js',
-    // 'bower_components/foundation-sites/js/foundation.reveal.js',
-    // 'bower_components/foundation-sites/js/foundation.slider.js',
-    // 'bower_components/foundation-sites/js/foundation.sticky.js',
-    // 'bower_components/foundation-sites/js/foundation.tabs.js',
     'bower_components/foundation-sites/js/foundation.toggler.js',
-    // 'bower_components/foundation-sites/js/foundation.tooltip.js',
     'node_modules/parse/dist/parse-latest.js',
-    'src/assets/js/**/*.js',
+    'src/assets/js/vendor/*.js',
+    'src/assets/js/event-information.js',
     'src/assets/js/app.js'
   ]
 };
@@ -132,10 +115,10 @@ gulp.task('javascript', function() {
     }));
 
   return gulp.src(PATHS.javascript)
-    .pipe($.sourcemaps.init())
+    // .pipe($.sourcemaps.init()) -- commented out because it destroys src order
     .pipe($.concat('app.js'))
     .pipe(uglify)
-    .pipe($.if(!isProduction, $.sourcemaps.write()))
+    // .pipe($.if(!isProduction, $.sourcemaps.write()))
     .pipe(gulp.dest('dist/assets/js'));
 });
 
@@ -159,7 +142,10 @@ gulp.task('build', function(done) {
 // Start a server with LiveReload to preview the site in
 gulp.task('server', ['build'], function() {
   browser.init({
-    server: 'dist', port: PORT
+    // server: 'dist',
+    // port: PORT,
+    serverStatic: ['dist'],
+    proxy: 'localhost:9292'
   });
 });
 
