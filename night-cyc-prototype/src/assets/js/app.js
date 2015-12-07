@@ -13,6 +13,8 @@ var setEventInformation = function(eventInfo){
   $(".goal-amount").html(eventInfo.goalFormatted());
   $(".progress-meter").css({width: eventInfo.goalPercentage()});
   $(".progress-meter-text").html(eventInfo.goalPercentage());
+  $("#totalBikes").html(eventInfo.get("totalBikes"));
+  $("#totalFrontRowBikes").html(eventInfo.get("totalFrontRowBikes"));
 
   if($(".bikes-left").length > 0){ // if it's on the page
     if(eventInfo.bikesLeft() > 0) { // if they're not sold out

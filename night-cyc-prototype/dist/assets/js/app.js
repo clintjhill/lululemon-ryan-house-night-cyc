@@ -21929,10 +21929,14 @@ $def($def.S, 'Object', {setPrototypeOf: _dereq_('./$.set-proto').set});
 
 var EventInformation = Parse.Object.extend("EventInformation", {
   bikesLeft: function(){
-    return 400 - parseInt(this.get("participants"), 10);
+    var totalBikes = this.get("totalBikes");
+    var participants = this.get("participants");
+    return totalBikes - participants;
   },
   frontRowBikesLeft: function(){
-    return 40 - parseInt(this.get("frontRowBikes"), 10);
+    var totalFrontRowBikes = this.get("totalFrontRowBikes");
+    var frontRowBikes = this.get("frontRowBikes");
+    return totalFrontRowBikes - frontRowBikes;
   },
   raisedSoFar: function(){
     return parseInt(this.get("totalAmountRaisedInCents"), 10) / 100; // converted from cents to dollars
@@ -21973,6 +21977,8 @@ var setEventInformation = function(eventInfo){
   $(".goal-amount").html(eventInfo.goalFormatted());
   $(".progress-meter").css({width: eventInfo.goalPercentage()});
   $(".progress-meter-text").html(eventInfo.goalPercentage());
+  $("#totalBikes").html(eventInfo.get("totalBikes"));
+  $("#totalFrontRowBikes").html(eventInfo.get("totalFrontRowBikes"));
 
   if($(".bikes-left").length > 0){ // if it's on the page
     if(eventInfo.bikesLeft() > 0) { // if they're not sold out
