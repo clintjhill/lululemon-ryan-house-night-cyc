@@ -92,9 +92,9 @@ var handleTokenResponseAndMakePayment = function(status, response){
     var token = response.id;
     $.post('/api/donation', createPayment(token), function(response){
       if(response.status == "succeeded" || response.paid == true){
-        console.log("Paid", response);
+        window.location = "/thanks";
       } else {
-        console.log("Failed", response);
+        window.location = "/failed";
       }
     });
   } else {

@@ -44,6 +44,13 @@
 
 body { background:#333; }
 img.credit-card { margin-bottom: 16px; }
+h1.failed {
+  color: $alert-color;
+  padding: 0 1rem;
+}
+a.failed {
+  margin: 0 3rem 1.5rem 3rem;
+}
 
 .header.panel {
   margin: 3rem auto 1rem auto;

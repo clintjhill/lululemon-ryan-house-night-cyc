@@ -10,13 +10,13 @@ var EventInformation = Parse.Object.extend("EventInformation", {
     return totalFrontRowBikes - frontRowBikes;
   },
   raisedSoFar: function(){
-    return parseInt(this.get("totalAmountRaisedInCents"), 10) / 100; // converted from cents to dollars
+    return this.get("totalAmountRaisedInCents") / 100; // converted from cents to dollars
   },
   raisedSoFarFormatted: function(){
     return accounting.formatMoney(this.raisedSoFar());
   },
   goal: function(){
-    return parseInt(this.get("totalAmountGoal"), 10);
+    return this.get("totalAmountGoal");
   },
   goalFormatted: function(){
     return accounting.formatMoney(this.goal());
@@ -25,7 +25,7 @@ var EventInformation = Parse.Object.extend("EventInformation", {
     var raised = this.get("totalAmountRaisedInCents") / 100; //converted from cents to dollars
     var goal = this.get("totalAmountGoal");
     if(raised > 0){
-      var str = parseInt(raised/goal*100, 10);
+      var str = parseInt(raised/goal*100,10);
       return str + "%";
     } else {
       return "0%";
