@@ -1,6 +1,11 @@
+require 'rack/ssl'
 require 'sinatra'
 require 'sinatra/json'
 require 'stripe'
+
+if ENV['RACK_ENV'] == 'production'
+  use Rack::SSL
+end
 
 Stripe.api_key = "sk_test_Abv2iJvMxL9IP9CxPnii4re6"
 
