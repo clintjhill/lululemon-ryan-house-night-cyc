@@ -118,33 +118,30 @@ input[data-toggle]:checked + label:active {
   }
   @include breakpoint(medium large xlarge xxlarge) {
     background: url('/assets/img/night-cyc-logo.png') no-repeat center center;
+    background-size: auto 90%;
   }
   @include breakpoint(medium) {
-    background-size: 80%;
     height: 400px;
     .header-subnav {
       top: 400px;
     }
   }
   @include breakpoint(large) {
-    background-size: 70%;
-    height: 350px;
+    height: 500px;
     .header-subnav {
-      top: 350px;
+      top: 500px;
     }
   }
   @include breakpoint(xlarge) {
-    background-size: 60%;
-    height: 300px;
+    height: 600px;
     .header-subnav {
-      top: 300px;
+      top: 600px;
     }
   }
   @include breakpoint(xxlarge) {
-    background-size: 60%;
-    height: 370px;
+    height: 700px;
     .header-subnav {
-      top: 370px;
+      top: 700px;
     }
   }
 }
