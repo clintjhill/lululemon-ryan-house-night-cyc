@@ -91,37 +91,67 @@ input[data-toggle]:checked + label:active {
 
 // Visual
 .panel {
-  padding: 2rem;
+  @include breakpoint(large xlarge xxlarge) {
+    margin: 1rem 7rem;
+    padding: 2rem;
+  }
+  @include breakpoint(medium) {
+    margin: 0.5rem 4rem;
+    padding: 1rem;
+  }
+  @include breakpoint(small down) {
+    margin: 0;
+    padding: 0;
+  }
 }
 
 .header {
-  text-align: center;
-  @include breakpoint(large) {
-    background: url('/assets/img/night-cyc-logo.png') no-repeat center center;
-    background-size: 60%;
-    height: 450px;
-  }
-  @include breakpoint(medium down) {
-    background: url('/assets/img/night-cyc-logo-square.jpg') no-repeat center center;
-    background-size: cover;
-    height: 400px;
-  }
   margin-bottom: 50px;
+
+  @include breakpoint(small) {
+    background: url('/assets/img/night-cyc-logo-square.jpg') no-repeat center center;
+    background-size: contain;
+    height: 450px;
+    .header-subnav {
+      top: 450px;
+    }
+  }
+  @include breakpoint(medium large xlarge xxlarge) {
+    background: url('/assets/img/night-cyc-logo.png') no-repeat center center;
+  }
+  @include breakpoint(medium) {
+    background-size: 80%;
+    height: 400px;
+    .header-subnav {
+      top: 400px;
+    }
+  }
+  @include breakpoint(large) {
+    background-size: 70%;
+    height: 350px;
+    .header-subnav {
+      top: 350px;
+    }
+  }
+  @include breakpoint(xlarge) {
+    background-size: 60%;
+    height: 300px;
+    .header-subnav {
+      top: 300px;
+    }
+  }
+  @include breakpoint(xxlarge) {
+    background-size: 60%;
+    height: 370px;
+    .header-subnav {
+      top: 370px;
+    }
+  }
 }
 
 .header-subnav {
-
-  @include breakpoint(large) {
-    top: 450px;
-  }
-
-  @include breakpoint(medium down) {
-    top: 400px;
-  }
-
   float: none;
   position: relative;
-
   text-align: center;
   margin-bottom: 0;
 
@@ -130,7 +160,7 @@ input[data-toggle]:checked + label:active {
     display: inline-block;
 
     a {
-      padding: 0.9rem 1rem 0.75rem;
+      padding: 0.9rem 0.7rem 0.75rem;
       font-size: 0.875rem;
       text-transform: uppercase;
       display: block;
