@@ -30,6 +30,18 @@ post '/api/donation' do
   end
 end
 
+get '/signup' do
+  send_file './night-cyc-prototype/dist/signup.html'
+end
+
+get '/sponsors' do
+  send_file './night-cyc-prototype/dist/sponsors.html'
+end
+
+get '/location' do
+  send_file './night-cyc-prototype/dist/location.html'
+end
+
 get '/thanks' do
   send_file './night-cyc-prototype/dist/thanks.html'
 end
