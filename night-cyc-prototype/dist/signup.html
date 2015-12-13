@@ -38,16 +38,20 @@
                 <p>Pick the spin class:</p>
                 <ul class="button-group toggle" data-toggle="buttons-radio">
                   <li>
-                    <input type="radio" id="the-madison" name="spin-class" value="the-madison" data-toggle="button" required>
-                    <label class="button" for="the-madison">The Madison</label>
+                    <input type="radio" id="madison-phx" name="spin-class" value="madison-phx" data-toggle="button" required>
+                    <label class="button" for="madison-phx">Madison Improvement Club (Phoenix)</label>
+                  </li>
+                  <li>
+                    <input type="radio" id="madison-tempe" name="spin-class" value="madison-tempe" data-toggle="button">
+                    <label class="button" for="madison-tempe">Madison Improvement Club (Tempe)</label>
                   </li>
                   <li>
                     <input type="radio" id="trucycle" name="spin-class" value="trucycle" data-toggle="button">
                     <label class="button" for="trucycle">TruCycle</label>
                   </li>
                   <li>
-                    <input type="radio" id="lulu-sponsored" name="spin-class" value="lulu-sponsored" data-toggle="button">
-                    <label class="button" for="lulu-sponsored">Lululemon Sponsored</label>
+                    <input type="radio" id="rpm" name="spin-class" value="rpm" data-toggle="button">
+                    <label class="button" for="rpm">rpm spin</label>
                   </li>
                 </ul>
               </div>
@@ -69,8 +73,11 @@
             </div>
       
             <div class="row collapse">
-              <div class="small-12  columns">
-                <input type="text" id="donation" name="donation" placeholder="Donation" required pattern="number">
+              <div class="small-4  columns">
+                <span class="bike-fee">$25.00 Bike Fee</span>
+              </div>
+              <div class="small-8 columns">
+                <input type="text" id="donation" name="donation" placeholder="You can donate more" required pattern="number">
               </div>
             </div>
       
@@ -153,7 +160,7 @@
     <footer class="footer">
       <div class="row">
         <div class="small-12 columns">
-          <p class="slogan">Lululemon Night Cyc<sub>le</sub> benefiting Ryan House</p>
+          <p class="slogan">lululemon Night Cyc<sub>le</sub> benefiting Ryan House</p>
           <p class="links">
             <a href="/">Home</a>
             <a href="/location">Location</a>
