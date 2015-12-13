@@ -9,52 +9,10 @@
         </div>
       </div>
 
-      <div class="row">
-        <div class="small-12 columns">
-          <p>Pick the spin class:</p>
-          <ul class="button-group toggle" data-toggle="buttons-radio">
-            <li>
-              <input type="radio" id="madison-phx" name="spin-class" value="madison-phx" data-toggle="button" required>
-              <label class="button" for="madison-phx">Madison Improvement Club (Phoenix)</label>
-            </li>
-            <li>
-              <input type="radio" id="madison-tempe" name="spin-class" value="madison-tempe" data-toggle="button">
-              <label class="button" for="madison-tempe">Madison Improvement Club (Tempe)</label>
-            </li>
-            <li>
-              <input type="radio" id="trucycle" name="spin-class" value="trucycle" data-toggle="button">
-              <label class="button" for="trucycle">TruCycle</label>
-            </li>
-            <li>
-              <input type="radio" id="rpm" name="spin-class" value="rpm" data-toggle="button">
-              <label class="button" for="rpm">rpm spin</label>
-            </li>
-          </ul>
-        </div>
-      </div>
-
-      <div class="front-row-bikes row">
-        <div class="small-6 columns">
-          <p>Want front row?</p>
-        </div>
-        <div class="small-6 columns">
-           <div class="switch large">
-             <input class="switch-input" id="yes-no" type="checkbox" name="front-row">
-             <label class="switch-paddle" for="yes-no">
-               <span class="switch-active" aria-hidden="true">Yes</span>
-               <span class="switch-inactive" aria-hidden="true">No</span>
-             </label>
-           </div>
-        </div>
-      </div>
+      {{> bike-info}}
 
       <div class="row collapse">
-        <div class="small-4  columns">
-          <span class="bike-fee">$25.00 Bike Fee</span>
-        </div>
-        <div class="small-8 columns">
-          <input type="text" id="donation" name="donation" placeholder="You can donate more" required pattern="number">
-        </div>
+        <input type="text" id="donation" name="donation" placeholder="You can donate more" required pattern="number">
       </div>
 
       {{> credit-card}}
