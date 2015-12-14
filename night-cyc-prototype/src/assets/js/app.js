@@ -88,10 +88,30 @@ var updateEventInformation = function(signUp){
 
 var isValidForm = function(){
   var invalids = $(".is-invalid-input").length + $(".is-invalid-label").length;
-  if(!$("select#spin-class").val()) invalids ++;
-  if(!$("select#card-month").val()) invalids ++;
-  if(!$("select#card-year").val()) invalids ++;
+  if(isRiding()){
+    if(!$("select#spin-class").val()) {
+      $("select#spin-class").addClass("is-invalid-input");
+      invalids ++;
+    }
+  } else {
+    if(!$("input#donation").val()) {
+      $("input#donation").addClass("is-invalid-input");
+      invalids ++;
+    }
+  }
+  if(!$("select#card-month").val()) {
+    $("select#card-month").addClass("is-invalid-input");
+    invalids ++;
+  }
+  if(!$("select#card-year").val()) {
+    $("select#card-year").addClass("is-invalid-input");
+    invalids ++;
+  }
   return invalids === 0;
+}
+
+var isRiding = function(){
+  return $("div[aria-hidden=false]")[0].id === "spinning";
 }
 
 var signUpEmail = function(){
