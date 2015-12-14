@@ -3,7 +3,7 @@ Stripe.setPublishableKey('pk_test_mnb2K52AawVfeFUmcuEV7CjJ');
 
 var eventInfoQuery = new Parse.Query("EventInformation");
 var classInfoQuery = new Parse.Query("SignUp");
-var classCounts = {};
+var classCounts = {total: 0};
 var eventInformation;
 
 /**
@@ -46,6 +46,7 @@ var updateClassCounts = function() {
     classInfoQuery.equalTo("spinClass", spinClass);
     promises.push(classInfoQuery.count({
       success: function(count) {
+        classCounts.total += count;
         classCounts[spinClass] = count;
       },
       error: function(err) {
@@ -54,8 +55,18 @@ var updateClassCounts = function() {
     }));
   });
   Parse.Promise.when(promises).then(function(){
-    updateClassAvailabilites();
+    if(classCounts.total < 400){
+      updateClassAvailabilites();
+    } else {
+      removeBikesOption();
+    }
   });
+}
+
+var removeBikesOption = function(){
+  $("a[href=#spinning]").html("We are sold out of bikes!");
+  $("div#spinning").html("We are sold out of bikes!");
+  $("a[href=#donating]").trigger("click");
 }
 
 /**
@@ -79,7 +90,9 @@ var updateClassAvailabilites = function(){
 var updateEventInformation = function(signUp){
   var newAmount = eventInformation.get("totalAmountRaisedInCents") + signUp.donationAmountInCents;
   eventInformation.set("totalAmountRaisedInCents", newAmount);
-  eventInformation.increment("participants");
+  if(signUp.spinClass){
+    eventInformation.increment("participants");
+  }
   if(signUp.frontRow){
     eventInformation.increment("frontRowBikes");
   }
@@ -250,7 +263,7 @@ $(document).ready(function(){
       console.log('Error', err);
     }
   });
-  if($("select#spin-class").length){
+  if($("form#sign-up").length){
     updateClassCounts();
   }
 });
