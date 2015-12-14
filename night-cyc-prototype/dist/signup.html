@@ -27,54 +27,63 @@
         <div class="panel">
           <form id="sign-up" data-abide novalidate>
       
-            <div class="row collapse">
-              <div class="small-12  columns">
+            <div class="row">
+              <div class="small-12 columns">
                 <input type="text" id="email" name="email" placeholder="Email" required pattern="email">
               </div>
             </div>
       
-            <ul class="accordion" data-accordion role="tablist">
-              <li class="accordion-item is-active">
-                <a href="#spinning" role="tab" class="accordion-title" id="panel-heading-1">Hell yes I'm spinning!</a>
-                <div id="spinning" class="accordion-content" role="tabpanel" data-tab-content aria-labeledby="panel-heading-1">
-                  <div class="row">
-                    <div class="small-12 large-6 columns">
-                    <select id="spin-class" name="spin-class" required>
-                      <option value="">Pick the class:</option>
-                      <option value="madison-phoenix">Madison Improvement Club (Phoenix)</option>
-                      <option value="madison-tempe">Madison Improvement Club (Tempe)</option>
-                      <option value="trucycle">TruCycle</option>
-                      <option value="rpm-spin">rpm spin</option>
-                    </select>
+            <div class="row">
+              <div class="small-12 columns">
+                <ul id="sign-up-options" class="accordion" data-accordion role="tablist">
+                  <li class="accordion-item is-active">
+                    <a href="#spinning" role="tab" class="accordion-title" id="panel-heading-1">Hell yes I'm riding!</a>
+                    <div id="spinning" class="accordion-content" role="tabpanel" data-tab-content aria-labeledby="panel-heading-1">
+                      <div class="row">
+                        <div class="small-12 large-6 columns">
+                        <select id="spin-class" name="spin-class" required>
+                          <option value="">Pick the class:</option>
+                          <option value="madison-phoenix">Madison Improvement Club (Phoenix)</option>
+                          <option value="madison-tempe">Madison Improvement Club (Tempe)</option>
+                          <option value="trucycle">TruCycle</option>
+                          <option value="rpm-spin">rpm spin</option>
+                        </select>
+                        </div>
+                        <div class="small-12 large-6 columns">
+                           <select id="front-row" name="front-row">
+                             <option value="">Want front row?</option>
+                             <option value="yes">Yes</option>
+                             <option value="no">No</option>
+                           </select>
+                        </div>
+                      </div>
+                      
+                      <div class="row">
+                        <div class="small-12 columns">
+                          <input type="text" name="extra-donation" id="extra-donation" placeholder="Extra donation?" pattern="number">
+                        </div>
+                      </div>
                     </div>
-                    <div class="small-12 large-6 columns">
-                       <select id="front-row" name="front-row">
-                         <option value="">Want front row?</option>
-                         <option value="yes">Yes</option>
-                         <option value="no">No</option>
-                       </select>
+                  </li>
+                  <li class="accordion-item">
+                    <a href="#donating" role="tab" class="accordion-title" id="panel-heading-2">I can't ride but I can make it rain!</a>
+                    <div id="donating" class="accordion-content" role="tabpanel" data-tab-content aria-labeledby="panel-heading-2">
+                      <div class="row collapse">
+                        <input type="text" id="donation" name="donation" placeholder="Feed happiness thru giving!" required pattern="number">
+                      </div>
                     </div>
-                  </div>
-                  
-                </div>
-              </li>
-              <li class="accordion-item">
-                <a href="#donating" role="tab" class="accordion-title" id="panel-heading-2">I can't ride but I can make it rain!</a>
-                <div id="donating" class="accordion-content" role="tabpanel" data-tab-content aria-labeledby="panel-heading-2">
-                  <div class="row collapse">
-                    <input type="text" id="donation" name="donation" placeholder="Feed happiness thru giving!" required pattern="number">
-                  </div>
-                </div>
-              </li>
-            </ul>
+                  </li>
+                </ul>
+              </div>
+            </div>
       
-            <div class="row collapse">
+            <div class="row">
               <div class="small-12 columns">
                 <input type="text" id="cardholder-name" name="cardholder-name" placeholder="Cardholder Name" data-stripe="name" required>
               </div>
             </div>
             
-            <div class="row collapse">
+            <div class="row">
               <div class="small-12 columns">
                 <input type="text" id="credit-card" name="credit-card" placeholder="Card Number" autocomplete="off" maxlength="20" data-stripe="number" required pattern="card">
               </div>
@@ -124,16 +133,22 @@
             </div>
             
       
-            <div class="row collapse">
-              <div class="small-4 columns">
+            <div class="row">
+              <div class="small-12 columns">
+                <div class="callout success">
+                  <p>You will be donating <span id="donation-total"></span> today!</p>
+                </div>
+              </div>
+            </div>
+            <div class="row">
+              <div class="small-5 columns">
                 <button type="submit" name="submit-signup" class="button">Sign Up</button>
               </div>
-              <div class="small-8 columns">
-                <div data-abide-error class="alert callout small" style="display: none">
+              <div class="small-7 columns">
+                <div data-abide-error class="alert callout small" style="display: none;">
                   <p>Uh oh. Missing things.</p>
                 </div>
               </div>
-      
             </div>
       
           </form>

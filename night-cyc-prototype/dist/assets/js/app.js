@@ -22261,6 +22261,7 @@ var eventInformation;
 
 /**
 * Sets the event information in the view. Not up to Parse.
+* Right now this is only on the Home page.
 */
 var setEventInformation = function(eventInfo){
   eventInformation = eventInfo; // make it globally available
@@ -22302,7 +22303,6 @@ var updateEventInformation = function(signUp){
 var isValidForm = function(){
   var invalids = $(".is-invalid-input").length + $(".is-invalid-label").length;
   if(!$("select#spin-class").val()) invalids ++;
-  if(!$("select#front-row").val()) invalids ++;
   if(!$("select#card-month").val()) invalids ++;
   if(!$("select#card-year").val()) invalids ++;
   return invalids === 0;
@@ -22313,7 +22313,37 @@ var signUpEmail = function(){
 }
 
 var signUpDonation = function(){
-  return accounting.unformat($("#donation").val()) * 100; // converted to cents
+  return accounting.unformat($("#donation-total").html()) * 100; // converted to cents
+}
+
+var updateDonationForBikeFee = function(){
+  var donationAmount = 0;
+  var spinClass = $("select#spin-class").val() !== "";
+  var frontRow = $("select#front-row").val() === "yes";
+  var extraDonation = parseInt($("input#extra-donation").val(),10) || 0;
+  if(spinClass && frontRow) {
+    donationAmount = 50;
+  } else if(spinClass && !frontRow) {
+    donationAmount = 25;
+  }
+  donationAmount += extraDonation;
+  $("span#donation-total").html(accounting.formatMoney(donationAmount));
+}
+
+var updateDonationForStraightFee = function(){
+  var donationAmount = 0;
+  var donation = parseInt($("input#donation").val(), 10) || 0;
+  donationAmount += donation;
+  $("span#donation-total").html(accounting.formatMoney(donationAmount));
+}
+
+var changeDonation = function(evt, option) {
+  var option = option[0].id;
+  if(option === "donating"){
+    updateDonationForStraightFee();
+  } else {
+    updateDonationForBikeFee();
+  }
 }
 
 /**
@@ -22380,16 +22410,27 @@ var saveSignUp = function(signUp){
 
 var signup = function(evt){
   evt.preventDefault();
-  $(this).find('button').prop('disabled', true);
 
   if(isValidForm()){
+    $(this).find('button').prop('disabled', true);
+    $(this).find('[data-abide-error]').css('display', 'none');
     var signUp = createSignUpFromForm();
     saveSignUp(signUp);
+  } else {
+    $(this).find('[data-abide-error]').css('display', 'block');
   }
 }
 
+/**
+* These are all of the 'page ready' things to wire up
+*/
 $(document).foundation();
 $("form#sign-up").on('submit', signup);
+$("select#spin-class").on('change', updateDonationForBikeFee);
+$("select#front-row").on('change', updateDonationForBikeFee);
+$("input#extra-donation").on('change', updateDonationForBikeFee);
+$("input#donation").on('change', updateDonationForStraightFee);
+$(".accordion").on('down.zf.accordion', changeDonation);
 
 $(document).ready(function(){
   eventInfoQuery.first({
