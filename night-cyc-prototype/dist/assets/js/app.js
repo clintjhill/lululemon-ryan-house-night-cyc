@@ -22294,20 +22294,38 @@ var setEventInformation = function(eventInfo){
 */
 var updateClassCounts = function() {
   var classes = ["madison-phoenix", "madison-tempe", "trucycle", "rpm-spin"];
+  var promises = [];
   $.each(classes, function(index, value){
     delete classInfoQuery._where["spinClass"];
     var spinClass = classes[index];
     classInfoQuery.equalTo("spinClass", spinClass);
-    classInfoQuery.count({
+    promises.push(classInfoQuery.count({
       success: function(count) {
         classCounts[spinClass] = count;
       },
       error: function(err) {
         console.log("Failed to get counts.", err);
       }
-    });
+    }));
   });
+  Parse.Promise.when(promises).then(function(){
+    updateClassAvailabilites();
+  });
+}
 
+/**
+* Sets the dropdown with proper SOLD OUT notices and removes
+* value of option so that it can't be validated.
+*/
+var updateClassAvailabilites = function(){
+  $.each(classCounts, function(key, value){
+    if(value === 100){
+      var original = $("select#spin-class").find("option[value="+key+"]").html();
+      // set HTML before killing the value
+      $("select#spin-class").find("option[value="+key+"]").html("SOLD OUT: " + original);
+      $("select#spin-class").find("option[value="+key+"]").val("");
+    }
+  });
 }
 
 /**
@@ -22363,6 +22381,9 @@ var updateDonationForStraightFee = function(){
   $("span#donation-total").html(accounting.formatMoney(donationAmount));
 }
 
+/**
+* When user changes the option to ride or not this updates donations.
+*/
 var changeDonation = function(evt, option) {
   var option = option[0].id;
   if(option === "donating"){
