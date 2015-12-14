@@ -238,6 +238,7 @@ var signup = function(evt){
 
   if(isValidForm()){
     $(this).find('button').prop('disabled', true);
+    $(this).find('button').addClass('disabled');
     $(this).find('[data-abide-error]').css('display', 'none');
     var signUp = createSignUpFromForm();
     saveSignUp(signUp);
