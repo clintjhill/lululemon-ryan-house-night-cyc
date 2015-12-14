@@ -22316,20 +22316,23 @@ var signUpDonation = function(){
   return accounting.unformat($("#donation-total").html()) * 100; // converted to cents
 }
 
+/**
+* Collects the bike and front-row fee as well as any extra amount.
+*/
 var updateDonationForBikeFee = function(){
   var donationAmount = 0;
   var spinClass = $("select#spin-class").val() !== "";
   var frontRow = $("select#front-row").val() === "yes";
   var extraDonation = parseInt($("input#extra-donation").val(),10) || 0;
-  if(spinClass && frontRow) {
-    donationAmount = 50;
-  } else if(spinClass && !frontRow) {
-    donationAmount = 25;
-  }
+  if(spinClass) donationAmount += 25;
+  if(frontRow) donationAmount += 25;
   donationAmount += extraDonation;
   $("span#donation-total").html(accounting.formatMoney(donationAmount));
 }
 
+/**
+* Collects the straight donation amount with no bike fees.
+*/
 var updateDonationForStraightFee = function(){
   var donationAmount = 0;
   var donation = parseInt($("input#donation").val(), 10) || 0;
