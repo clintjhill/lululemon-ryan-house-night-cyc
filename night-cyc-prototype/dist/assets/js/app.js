@@ -22257,6 +22257,8 @@ Parse.initialize('oHvIaEjqPA5s3QiQ2DYtT6TxXBhOU97V1EzMptQD', 'c3IeV15NBVtpKgISMb
 Stripe.setPublishableKey('pk_test_mnb2K52AawVfeFUmcuEV7CjJ');
 
 var eventInfoQuery = new Parse.Query("EventInformation");
+var classInfoQuery = new Parse.Query("SignUp");
+var classCounts = {};
 var eventInformation;
 
 /**
@@ -22285,6 +22287,27 @@ var setEventInformation = function(eventInfo){
       $(".front-row-bikes-left").html("Sold Out!");
     }
   }
+}
+
+/**
+* Queries a count for each spinClass SignUp object from Parse.
+*/
+var updateClassCounts = function() {
+  var classes = ["madison-phoenix", "madison-tempe", "trucycle", "rpm-spin"];
+  $.each(classes, function(index, value){
+    delete classInfoQuery._where["spinClass"];
+    var spinClass = classes[index];
+    classInfoQuery.equalTo("spinClass", spinClass);
+    classInfoQuery.count({
+      success: function(count) {
+        classCounts[spinClass] = count;
+      },
+      error: function(err) {
+        console.log("Failed to get counts.", err);
+      }
+    });
+  });
+
 }
 
 /**
@@ -22428,18 +22451,20 @@ var signup = function(evt){
 * These are all of the 'page ready' things to wire up
 */
 $(document).foundation();
-$("form#sign-up").on('submit', signup);
-$("select#spin-class").on('change', updateDonationForBikeFee);
-$("select#front-row").on('change', updateDonationForBikeFee);
-$("input#extra-donation").on('change', updateDonationForBikeFee);
-$("input#donation").on('change', updateDonationForStraightFee);
-$(".accordion").on('down.zf.accordion', changeDonation);
-
 $(document).ready(function(){
+  $("form#sign-up").on('submit', signup);
+  $("select#spin-class").on('change', updateDonationForBikeFee);
+  $("select#front-row").on('change', updateDonationForBikeFee);
+  $("input#extra-donation").on('change', updateDonationForBikeFee);
+  $("input#donation").on('change', updateDonationForStraightFee);
+  $(".accordion").on('down.zf.accordion', changeDonation);
   eventInfoQuery.first({
     success: setEventInformation,
     error: function(err){
       console.log('Error', err);
     }
   });
+  if($("select#spin-class").length){
+    updateClassCounts();
+  }
 });
