@@ -44,7 +44,7 @@ var updateEventInformation = function(signUp){
   eventInformation.save();
 }
 
-var validForm = function(){
+var isValidForm = function(){
   var invalids = $(".is-invalid-input").length + $(".is-invalid-label").length;
   if(!$("#card-month").val()) invalids ++;
   if(!$("#card-year").val()) invalids ++;
@@ -125,7 +125,7 @@ var signup = function(evt){
   evt.preventDefault();
   $(this).find('button').prop('disabled', true);
 
-  if(validForm()){
+  if(isValidForm()){
     var signUp = createSignUpFromForm();
     saveSignUp(signUp);
   }

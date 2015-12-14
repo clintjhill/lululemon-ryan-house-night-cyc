@@ -33,49 +33,63 @@
               </div>
             </div>
       
-            <div class="row">
-              <div class="small-12 columns">
-                <p>Pick the spin class:</p>
-                <ul class="button-group toggle" data-toggle="buttons-radio">
-                  <li>
-                    <input type="radio" id="madison-phx" name="spin-class" value="madison-phx" data-toggle="button" required>
-                    <label class="button" for="madison-phx">Madison Improvement Club (Phoenix)</label>
-                  </li>
-                  <li>
-                    <input type="radio" id="madison-tempe" name="spin-class" value="madison-tempe" data-toggle="button">
-                    <label class="button" for="madison-tempe">Madison Improvement Club (Tempe)</label>
-                  </li>
-                  <li>
-                    <input type="radio" id="trucycle" name="spin-class" value="trucycle" data-toggle="button">
-                    <label class="button" for="trucycle">TruCycle</label>
-                  </li>
-                  <li>
-                    <input type="radio" id="rpm" name="spin-class" value="rpm" data-toggle="button">
-                    <label class="button" for="rpm">rpm spin</label>
-                  </li>
-                </ul>
-              </div>
-            </div>
-            
-            <div class="front-row-bikes row">
-              <div class="small-6 columns">
-                <p>Want front row?</p>
-              </div>
-              <div class="small-6 columns">
-                 <div class="switch large">
-                   <input class="switch-input" id="yes-no" type="checkbox" name="front-row">
-                   <label class="switch-paddle" for="yes-no">
-                     <span class="switch-active" aria-hidden="true">Yes</span>
-                     <span class="switch-inactive" aria-hidden="true">No</span>
-                   </label>
-                 </div>
-              </div>
-            </div>
-            
       
-            <div class="row collapse">
-              <input type="text" id="donation" name="donation" placeholder="You can donate more" required pattern="number">
-            </div>
+      
+      
+            <ul class="accordion" data-accordion role="tablist">
+              <li class="accordion-item is-active">
+                <a href="#spinning" role="tab" class="accordion-title" id="panel-heading-1">Hell yes I'm spinning!</a>
+                <div id="spinning" class="accordion-content" role="tabpanel" data-tab-content aria-labeledby="panel-heading-1">
+                  <div class="row">
+                    <div class="small-12 columns">
+                      <p>Pick the spin class:</p>
+                      <ul class="button-group toggle" data-toggle="buttons-radio">
+                        <li>
+                          <input type="radio" id="madison-phx" name="spin-class" value="madison-phx" data-toggle="button" required>
+                          <label class="button" for="madison-phx">Madison Improvement Club (Phoenix)</label>
+                        </li>
+                        <li>
+                          <input type="radio" id="madison-tempe" name="spin-class" value="madison-tempe" data-toggle="button">
+                          <label class="button" for="madison-tempe">Madison Improvement Club (Tempe)</label>
+                        </li>
+                        <li>
+                          <input type="radio" id="trucycle" name="spin-class" value="trucycle" data-toggle="button">
+                          <label class="button" for="trucycle">TruCycle</label>
+                        </li>
+                        <li>
+                          <input type="radio" id="rpm" name="spin-class" value="rpm" data-toggle="button">
+                          <label class="button" for="rpm">rpm spin</label>
+                        </li>
+                      </ul>
+                    </div>
+                  </div>
+                  
+                  <div class="front-row-bikes row">
+                    <div class="small-6 columns">
+                      <p>Want front row?</p>
+                    </div>
+                    <div class="small-6 columns">
+                       <div class="switch large">
+                         <input class="switch-input" id="yes-no" type="checkbox" name="front-row">
+                         <label class="switch-paddle" for="yes-no">
+                           <span class="switch-active" aria-hidden="true">Yes</span>
+                           <span class="switch-inactive" aria-hidden="true">No</span>
+                         </label>
+                       </div>
+                    </div>
+                  </div>
+                  
+                </div>
+              </li>
+              <li class="accordion-item">
+                <a href="#donating" role="tab" class="accordion-title" id="panel-heading-2">I can't ride but I can make it rain!</a>
+                <div id="donating" class="accordion-content" role="tabpanel" data-tab-content aria-labeledby="panel-heading-2">
+                  <div class="row collapse">
+                    <input type="text" id="donation" name="donation" placeholder="You can donate more" required pattern="number">
+                  </div>
+                </div>
+              </li>
+            </ul>
       
             <div class="row collapse">
               <div class="small-12 columns">
@@ -156,14 +170,13 @@
     <footer class="footer">
       <div class="row">
         <div class="small-12 columns">
-          <p class="slogan">lululemon Night Cyc<sub>le</sub> benefiting Ryan House</p>
           <p class="links">
             <a href="/">Home</a>
             <a href="/location">Location</a>
             <a href="/signup">Sign Up</a>
             <a href="/sponsors">Sponsors</a>
           </p>
-          <p class="copywrite">The best thing in 2016</p>
+          <p class="copywrite">Fueling our happiness through the gift of giving</p>
         </div>
       </div>
     </footer>
