@@ -32,7 +32,6 @@ var PATHS = {
     'bower_components/foundation-sites/js/foundation.core.js',
     'bower_components/foundation-sites/js/foundation.util.*.js',
     'bower_components/foundation-sites/js/foundation.abide.js',
-    'bower_components/foundation-sites/js/foundation.toggler.js',
     'bower_components/foundation-sites/js/foundation.accordion.js',
     'bower_components/foundation-sites/js/foundation.accordionMenu.js',
     'node_modules/parse/dist/parse-latest.js',

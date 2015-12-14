@@ -1,38 +1,18 @@
 <div class="row">
-  <div class="small-12 columns">
-    <p>Pick the spin class:</p>
-    <ul class="button-group toggle" data-toggle="buttons-radio">
-      <li>
-        <input type="radio" id="madison-phx" name="spin-class" value="madison-phx" data-toggle="button" required>
-        <label class="button" for="madison-phx">Madison Improvement Club (Phoenix)</label>
-      </li>
-      <li>
-        <input type="radio" id="madison-tempe" name="spin-class" value="madison-tempe" data-toggle="button">
-        <label class="button" for="madison-tempe">Madison Improvement Club (Tempe)</label>
-      </li>
-      <li>
-        <input type="radio" id="trucycle" name="spin-class" value="trucycle" data-toggle="button">
-        <label class="button" for="trucycle">TruCycle</label>
-      </li>
-      <li>
-        <input type="radio" id="rpm" name="spin-class" value="rpm" data-toggle="button">
-        <label class="button" for="rpm">rpm spin</label>
-      </li>
-    </ul>
+  <div class="small-12 large-6 columns">
+  <select id="spin-class" name="spin-class" required>
+    <option value="">Pick the class:</option>
+    <option value="madison-phoenix">Madison Improvement Club (Phoenix)</option>
+    <option value="madison-tempe">Madison Improvement Club (Tempe)</option>
+    <option value="trucycle">TruCycle</option>
+    <option value="rpm-spin">rpm spin</option>
+  </select>
   </div>
-</div>
-
-<div class="front-row-bikes row">
-  <div class="small-6 columns">
-    <p>Want front row?</p>
-  </div>
-  <div class="small-6 columns">
-     <div class="switch large">
-       <input class="switch-input" id="yes-no" type="checkbox" name="front-row">
-       <label class="switch-paddle" for="yes-no">
-         <span class="switch-active" aria-hidden="true">Yes</span>
-         <span class="switch-inactive" aria-hidden="true">No</span>
-       </label>
-     </div>
+  <div class="small-12 large-6 columns">
+     <select id="front-row" name="front-row">
+       <option value="">Want front row?</option>
+       <option value="yes">Yes</option>
+       <option value="no">No</option>
+     </select>
   </div>
 </div>

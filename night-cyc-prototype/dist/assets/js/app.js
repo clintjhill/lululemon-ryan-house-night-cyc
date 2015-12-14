@@ -9426,7 +9426,7 @@ return jQuery;
 
 "use strict";
 
-var FOUNDATION_VERSION = '6.0.4';
+var FOUNDATION_VERSION = '6.0.3';
 
 // Global Foundation object
 // This is attached to the window, or used as a module for AMD/Browserify
@@ -9586,21 +9586,12 @@ var Foundation = {
 
       // For each plugin found, initialize it
       $elem.each(function() {
-        var $el = $(this),
-            opts = {};
         // Don't double-dip on plugins
-        if ($el.attr('zf-plugin')) {
+        if ($(this).attr('zf-plugin')) {
           console.warn("Tried to initialize "+name+" on an element that already has a Foundation plugin.");
           return;
         }
-
-        if($el.attr('data-options')){
-          var thing = $el.attr('data-options').split(';').forEach(function(e, i){
-            var opt = e.split(':').map(function(el){ return el.trim(); });
-            if(opt[0]) opts[opt[0]] = parseValue(opt[1]);
-          });
-        }
-        $el.data('zf-plugin', new plugin($(this), opts));
+        $(this).data('zf-plugin', new plugin($(this)));
       });
     });
   },
@@ -9775,12 +9766,7 @@ function functionName(fn) {
     return fn.prototype.constructor.name;
   }
 }
-function parseValue(str){
-  if(/true/.test(str)) return true;
-  else if(/false/.test(str)) return false;
-  else if(!isNaN(str * 1)/* && typeof (str * 1) === "number"*/) return parseFloat(str);
-  return str;
-}
+
 // Convert PascalCase to kebab-case
 // Thank you: http://stackoverflow.com/a/8955580
 function hyphenate(str) {
@@ -10383,24 +10369,13 @@ Foundation.Motion = Motion;
           subMenuClass = 'is-' + type + '-submenu',
           subItemClass = subMenuClass + '-item',
           hasSubClass = 'is-' + type + '-submenu-parent';
-      menu.find('a:first').attr('tabindex', 0);
+
       items.each(function(){
         var $item = $(this),
             $sub = $item.children('ul');
         if($sub.length){
-          $item.addClass('has-submenu ' + hasSubClass)
-               .attr({
-                 'aria-haspopup': true,
-                 'aria-selected': false,
-                 'aria-expanded': false,
-                 'aria-label': $item.children('a:first').text()
-               });
-          $sub.addClass('submenu ' + subMenuClass)
-              .attr({
-                'data-submenu': '',
-                'aria-hidden': true,
-                'role': 'menu'
-              });
+          $item.addClass('has-submenu ' + hasSubClass);
+          $sub.addClass('submenu ' + subMenuClass).attr('data-submenu', '');
         }
         if($item.parent('[data-submenu]').length){
           $item.addClass('is-submenu-item ' + subItemClass);
@@ -11473,178 +11448,6 @@ Foundation.Motion = Motion;
 }(Foundation, jQuery);
 
 /**
- * Toggler module.
- * @module foundation.toggler
- * @requires foundation.util.motion
- */
-
-!function(Foundation, $) {
-  'use strict';
-
-  /**
-   * Creates a new instance of Toggler.
-   * @class
-   * @fires Toggler#init
-   * @param {Object} element - jQuery object to add the trigger to.
-   * @param {Object} options - Overrides to the default plugin settings.
-   */
-  function Toggler(element, options) {
-    this.$element = element;
-    this.options = $.extend({}, Toggler.defaults, element.data(), options);
-    this.className = '';
-
-    this._init();
-    this._events();
-
-    Foundation.registerPlugin(this);
-  }
-
-  Toggler.defaults = {
-    /**
-     * Tells the plugin if the element should animated when toggled.
-     * @option
-     * @example false
-     */
-    animate: false
-  };
-
-  /**
-   * Initializes the Toggler plugin by parsing the toggle class from data-toggler, or animation classes from data-animate.
-   * @function
-   * @private
-   */
-  Toggler.prototype._init = function() {
-    var input;
-    // Parse animation classes if they were set
-    if (this.options.animate) {
-      input = this.options.animate.split(' ');
-
-      this.animationIn = input[0];
-      this.animationOut = input[1] || null;
-    }
-    // Otherwise, parse toggle class
-    else {
-      input = this.$element.data('toggler');
-
-      // Allow for a . at the beginning of the string
-      if (input[0] === '.') {
-        this.className = input.slice(1);
-      }
-      else {
-        this.className = input;
-      }
-    }
-
-    // Add ARIA attributes to triggers
-    var id = this.$element[0].id;
-    $('[data-open="'+id+'"], [data-close="'+id+'"], [data-toggle="'+id+'"]')
-      .attr('aria-controls', id);
-
-    // If the target is hidden, add aria-hidden
-    if (this.$element.is(':hidden')) {
-      this.$element.attr('aria-expanded', 'false');
-    }
-  };
-
-  /**
-   * Initializes events for the toggle trigger.
-   * @function
-   * @private
-   */
-  Toggler.prototype._events = function() {
-    var _this = this;
-
-    this.$element.on('toggle.zf.trigger', function() {
-      _this.toggle();
-      return false;
-    });
-  };
-
-  /**
-   * Toggles the target class on the target element. An event is fired from the original trigger depending on if the resultant state was "on" or "off".
-   * @function
-   * @fires Toggler#on
-   * @fires Toggler#off
-   */
-  Toggler.prototype.toggle = function() {
-    if (!this.options.animate) {
-      this._toggleClass();
-    }
-    else {
-      this._toggleAnimate();
-    }
-  };
-
-  Toggler.prototype._toggleClass = function() {
-    var _this = this;
-    this.$element.toggleClass(this.className);
-
-    if (this.$element.hasClass(this.className)) {
-      /**
-       * Fires if the target element has the class after a toggle.
-       * @event Toggler#on
-       */
-      this.$element.trigger('on.zf.toggler');
-    }
-    else {
-      /**
-       * Fires if the target element does not have the class after a toggle.
-       * @event Toggler#off
-       */
-      this.$element.trigger('off.zf.toggler');
-    }
-
-    _this._updateARIA();
-  };
-
-  Toggler.prototype._toggleAnimate = function() {
-    var _this = this;
-
-    if (this.$element.is(':hidden')) {
-      Foundation.Motion.animateIn(this.$element, this.animationIn, function() {
-        this.trigger('on.zf.toggler');
-        _this._updateARIA();
-      });
-    }
-    else {
-      Foundation.Motion.animateOut(this.$element, this.animationOut, function() {
-        this.trigger('off.zf.toggler');
-        _this._updateARIA();
-      });
-    }
-  };
-
-  Toggler.prototype._updateARIA = function() {
-    if (this.$element.is(':hidden')) {
-      this.$element.attr('aria-expanded', 'false');
-    }
-    else {
-      this.$element.attr('aria-expanded', 'true');
-    }
-  };
-
-  /**
-   * Destroys the instance of Toggler on the element.
-   * @function
-   */
-  Toggler.prototype.destroy= function() {
-    this.$element.off('.zf.toggler');
-    Foundation.unregisterPlugin(this);
-  };
-
-  Foundation.plugin(Toggler, 'Toggler');
-
-  // Exports for AMD/Browserify
-  if (typeof module !== 'undefined' && typeof module.exports !== 'undefined')
-    module.exports = Toggler;
-  if (typeof define === 'function')
-    define(['foundation'], function() {
-      return Toggler;
-    });
-
-}(Foundation, jQuery);
-
-/**
  * Accordion module.
  * @module foundation.accordion
  * @requires foundation.util.keyboard
@@ -12074,9 +11877,9 @@ Foundation.Motion = Motion;
    */
   AccordionMenu.prototype.down = function($target) {
     var _this = this;
-
+    console.log($target);
     if(!this.options.multiOpen){
-      this.up(this.$element.find('.is-active').not($target.parentsUntil(this.$element).add($target)));
+      this.up(this.$element.find('.is-active').not($target.parentsUntil(this.$element)));
     }
 
     $target.addClass('is-active').attr({'aria-hidden': false})
@@ -22498,8 +22301,10 @@ var updateEventInformation = function(signUp){
 
 var isValidForm = function(){
   var invalids = $(".is-invalid-input").length + $(".is-invalid-label").length;
-  if(!$("#card-month").val()) invalids ++;
-  if(!$("#card-year").val()) invalids ++;
+  if(!$("select#spin-class").val()) invalids ++;
+  if(!$("select#front-row").val()) invalids ++;
+  if(!$("select#card-month").val()) invalids ++;
+  if(!$("select#card-year").val()) invalids ++;
   return invalids === 0;
 }
 
@@ -22517,8 +22322,8 @@ var signUpDonation = function(){
 var createSignUpFromForm = function(){
   return {
     email: signUpEmail(),
-    spinClass: $("input[data-toggle]:checked").val(),
-    frontRow: $("input[name=front-row]:checked").length === 1,
+    spinClass: $("select#spin-class").val(),
+    frontRow: $("select#front-row").val() === "yes",
     donationAmountInCents: signUpDonation()
   }
 }

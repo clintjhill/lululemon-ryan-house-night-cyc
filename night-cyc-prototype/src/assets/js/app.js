@@ -46,8 +46,10 @@ var updateEventInformation = function(signUp){
 
 var isValidForm = function(){
   var invalids = $(".is-invalid-input").length + $(".is-invalid-label").length;
-  if(!$("#card-month").val()) invalids ++;
-  if(!$("#card-year").val()) invalids ++;
+  if(!$("select#spin-class").val()) invalids ++;
+  if(!$("select#front-row").val()) invalids ++;
+  if(!$("select#card-month").val()) invalids ++;
+  if(!$("select#card-year").val()) invalids ++;
   return invalids === 0;
 }
 
@@ -65,8 +67,8 @@ var signUpDonation = function(){
 var createSignUpFromForm = function(){
   return {
     email: signUpEmail(),
-    spinClass: $("input[data-toggle]:checked").val(),
-    frontRow: $("input[name=front-row]:checked").length === 1,
+    spinClass: $("select#spin-class").val(),
+    frontRow: $("select#front-row").val() === "yes",
     donationAmountInCents: signUpDonation()
   }
 }

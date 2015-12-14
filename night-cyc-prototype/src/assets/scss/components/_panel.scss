@@ -1,0 +1,14 @@
+.panel {
+  @include breakpoint(large xlarge xxlarge) {
+    margin: 1rem 7rem;
+    padding: 2rem;
+  }
+  @include breakpoint(medium) {
+    margin: 0.5rem 1rem;
+    padding: 0.5rem;
+  }
+  @include breakpoint(small down) {
+    margin: 0;
+    padding: 0.5rem;
+  }
+}
