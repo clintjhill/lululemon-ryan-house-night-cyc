@@ -39,6 +39,10 @@
   },
   "private": true,
   "dependencies": {
-    "parse": "^1.6.9"
+    "foundation-sites": "^6.0.5",
+    "jquery": "^2.1.4",
+    "motion-ui": "^1.1.1",
+    "parse": "^1.6.9",
+    "what-input": "^1.1.4"
   }
 }

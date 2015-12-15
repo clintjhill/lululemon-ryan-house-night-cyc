@@ -1,4 +1,5 @@
 Parse.initialize('oHvIaEjqPA5s3QiQ2DYtT6TxXBhOU97V1EzMptQD', 'c3IeV15NBVtpKgISMbUqKmsu1M2VpV5DoxCseKRS');
+// Stripe is added via script tag - not npm'd into this project.
 Stripe.setPublishableKey('pk_test_mnb2K52AawVfeFUmcuEV7CjJ');
 
 var eventInfoQuery = new Parse.Query("EventInformation");

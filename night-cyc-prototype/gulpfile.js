@@ -23,17 +23,17 @@ var PATHS = {
     '!src/assets/{!img,js,scss}/**/*'
   ],
   sass: [
-    'bower_components/foundation-sites/scss',
-    'bower_components/motion-ui/src/'
+    'node_modules/foundation-sites/scss',
+    'node_modules/motion-ui/src/'
   ],
   javascript: [
-    'bower_components/jquery/dist/jquery.js',
-    'bower_components/what-input/what-input.js',
-    'bower_components/foundation-sites/js/foundation.core.js',
-    'bower_components/foundation-sites/js/foundation.util.*.js',
-    'bower_components/foundation-sites/js/foundation.abide.js',
-    'bower_components/foundation-sites/js/foundation.accordion.js',
-    'bower_components/foundation-sites/js/foundation.accordionMenu.js',
+    'node_modules/jquery/dist/jquery.js',
+    'node_modules/what-input/what-input.js',
+    'node_modules/foundation-sites/js/foundation.core.js',
+    'node_modules/foundation-sites/js/foundation.util.*.js',
+    'node_modules/foundation-sites/js/foundation.abide.js',
+    'node_modules/foundation-sites/js/foundation.accordion.js',
+    'node_modules/foundation-sites/js/foundation.accordionMenu.js',
     'node_modules/parse/dist/parse-latest.js',
     'src/assets/js/vendor/*.js',
     'src/assets/js/event-information.js',
