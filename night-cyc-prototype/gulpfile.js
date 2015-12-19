@@ -2,6 +2,7 @@ var $        = require('gulp-load-plugins')();
 var argv     = require('yargs').argv;
 var browser  = require('browser-sync');
 var gulp     = require('gulp');
+var karma    = require('karma').Server;
 var panini   = require('panini');
 var rimraf   = require('rimraf');
 var sequence = require('run-sequence');
@@ -37,7 +38,8 @@ var PATHS = {
     'node_modules/parse/dist/parse-latest.js',
     'src/assets/js/vendor/*.js',
     'src/assets/js/event-information.js',
-    'src/assets/js/app.js'
+    'src/assets/js/app.js',
+    'src/assets/js/init.js'
   ]
 };
 
@@ -123,6 +125,12 @@ gulp.task('javascript', function() {
     .pipe(gulp.dest('dist/assets/js'));
 });
 
+gulp.task('test', function(done){
+  return new karma({
+    configFile: __dirname + '/karma.conf.js'
+  }, done).start();
+});
+
 // Copy images to the "dist" folder
 // In production, the images are compressed
 gulp.task('images', function() {
@@ -156,7 +164,8 @@ gulp.task('default', ['build', 'server'], function() {
   gulp.watch(['src/pages/**/*.html'], ['pages', browser.reload]);
   gulp.watch(['src/{layouts,partials}/**/*.html'], ['pages:reset', browser.reload]);
   gulp.watch(['src/assets/scss/**/*.scss'], ['sass', browser.reload]);
-  gulp.watch(['src/assets/js/**/*.js'], ['javascript', browser.reload]);
+  gulp.watch(['src/assets/js/**/*.js'], ['javascript','test', browser.reload]);
+  gulp.watch(['src/spec/**/*.js'], ['javascript', 'test', browser.reload]);
   gulp.watch(['src/assets/img/**/*'], ['images', browser.reload]);
   gulp.watch(['src/styleguide/**'], ['styleguide', browser.reload]);
 });
