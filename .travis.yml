@@ -7,9 +7,8 @@ install:
   - npm install
 
 script:
-  - cd night-cyc-prototype
   - gulp test
-  
+
 deploy:
   provider: heroku
   api_key:

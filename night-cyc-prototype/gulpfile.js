@@ -127,7 +127,8 @@ gulp.task('javascript', function() {
 
 gulp.task('test', function(done){
   return new karma({
-    configFile: __dirname + '/karma.conf.js'
+    configFile: __dirname + '/karma.conf.js',
+    singleRun: true
   }, done).start();
 });
 
