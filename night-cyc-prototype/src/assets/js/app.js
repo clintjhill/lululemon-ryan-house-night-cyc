@@ -161,8 +161,8 @@ var updateDonationForStraightFee = function(){
 * When user changes the option to ride or not this updates donations.
 */
 var changeDonation = function(evt, option) {
-  var option = option[0].id;
-  if(option === "donating"){
+  var toggle = option[0].id;
+  if(toggle === "donating"){
     updateDonationForStraightFee();
   } else {
     updateDonationForBikeFee();
