@@ -62,7 +62,7 @@ var updateClassCounts = function() {
 }
 
 var showAvailableOrRemoveBikes = function(){
-  if(classCounts.total < 400){
+  if(classCounts.total < eventInformation.get("totalBikes")){
     updateClassAvailabilites();
   } else {
     removeBikesOption();
@@ -151,7 +151,7 @@ var showFrontRowAvailable = function(){
   var selectedClass = $("#spin-class").val();
   if(selectedClass.length > 0){
     var frontRowCount = classCounts[selectedClass].frontRow;
-    if(frontRowCount === 18){
+    if(frontRowCount === eventInformation.get("frontRowPerClass")){
       $("#front-row").prop("disabled", true);
       $("#front-row").find("option[value='']").html("Sold Out!");
       $("#front-row").find("option[value='']").prop("selected", "selected");

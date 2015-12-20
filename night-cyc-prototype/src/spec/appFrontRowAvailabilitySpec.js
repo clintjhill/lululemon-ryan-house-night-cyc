@@ -10,7 +10,7 @@ describe("front-row availability", function(){
         '<option value="yes">Yes</option>' +
         '<option value="no">No</option>' +
       '</select>';
-
+    spyOn(window.eventInformation, "get").and.returnValue(18);
   });
 
   it("should show available per class", function(){
