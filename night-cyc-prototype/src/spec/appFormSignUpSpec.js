@@ -55,5 +55,19 @@ describe("app form signup", function(){
 
     });
 
+    describe("Parse save error", function(){
+
+      beforeEach(function(){
+        var error = mockSave.save.calls.argsFor(0)[1].error;
+        spyOn(window, "goToPage");
+        error({}, "Fake Error");
+      });
+
+      it("should send user to failed page", function(){
+        expect(window.goToPage).toHaveBeenCalledWith("/failed");
+      });
+
+    });
+
   });
 });

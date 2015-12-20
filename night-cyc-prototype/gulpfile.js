@@ -132,6 +132,12 @@ gulp.task('test', function(done){
   }, done).start();
 });
 
+gulp.task('tdd', function(done){
+  return new karma({
+    configFile: __dirname + '/karma.conf.js'
+  }, done).start();
+});
+
 // Copy images to the "dist" folder
 // In production, the images are compressed
 gulp.task('images', function() {

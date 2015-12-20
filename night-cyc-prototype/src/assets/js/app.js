@@ -200,22 +200,31 @@ var createPayment = function(token){
 var handleTokenResponseAndMakePayment = function(status, response){
   if(status === 200){
     var token = response.id;
-    $.post('/api/donation', createPayment(token), function(response){
-      if(response.status == "succeeded" || response.paid == true){
-        window.location = "/thanks";
-      } else {
-        window.location = "/failed";
-      }
-    });
+    var paymentObject = createPayment(token);
+    makePayment(paymentObject);
   } else {
-    console.log("Failed", status, response);
+    goToPage("/failed");
   }
+}
+
+/**
+* Sending the payment object our payment API.
+*/
+var makePayment = function(paymentObject){
+  $.post('/api/donation', paymentObject, function(response){
+    if(response.status == "succeeded" || response.paid == true){
+      goToPage("/thanks");
+    } else {
+      goToPage("/failed");
+    }
+  });
 }
 
 var signUpObject = function(){
   var SignUp = Parse.Object.extend("SignUp");
   return new SignUp();
 }
+
 /**
 * First we call Parse to record signup.
 * Second we call Stripe to create a Token.
@@ -229,7 +238,7 @@ var saveSignUp = function(signUp){
       Stripe.card.createToken($("form#sign-up"), handleTokenResponseAndMakePayment);
     },
     error: function(signedUp, error){
-      console.log("Failed", error, signedUp);
+      goToPage("/failed");
     }
   });
 }
@@ -246,4 +255,8 @@ var signup = function(evt){
   } else {
     $(this).find('[data-abide-error]').css('display', 'block');
   }
+}
+
+var goToPage = function(page){
+  window.location = page;
 }
