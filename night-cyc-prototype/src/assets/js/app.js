@@ -52,13 +52,15 @@ var updateClassCounts = function() {
       }
     }));
   });
-  Parse.Promise.when(promises).then(function(){
-    if(classCounts.total < 400){
-      updateClassAvailabilites();
-    } else {
-      removeBikesOption();
-    }
-  });
+  Parse.Promise.when(promises).then(showAvailableOrRemoveBikes);
+}
+
+var showAvailableOrRemoveBikes = function(){
+  if(classCounts.total < 400){
+    updateClassAvailabilites();
+  } else {
+    removeBikesOption();
+  }
 }
 
 var removeBikesOption = function(){
@@ -86,7 +88,8 @@ var updateClassAvailabilites = function(){
 * Updates the event information up to Parse.
 */
 var updateEventInformation = function(signUp){
-  var newAmount = eventInformation.get("totalAmountRaisedInCents") + signUp.donationAmountInCents;
+  var currentAmount = eventInformation.get("totalAmountRaisedInCents") || 0;
+  var newAmount = currentAmount + signUp.donationAmountInCents;
   eventInformation.set("totalAmountRaisedInCents", newAmount);
   if(signUp.spinClass){
     eventInformation.increment("participants");
