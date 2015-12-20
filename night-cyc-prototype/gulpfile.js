@@ -36,7 +36,7 @@ var PATHS = {
     'node_modules/foundation-sites/js/foundation.accordion.js',
     'node_modules/foundation-sites/js/foundation.accordionMenu.js',
     'node_modules/parse/dist/parse-latest.js',
-    'src/assets/js/vendor/*.js',
+    'src/assets/js/vendor/accounting.js',
     'src/assets/js/event-information.js',
     'src/assets/js/app.js',
     'src/assets/js/init.js'
