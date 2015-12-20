@@ -1,6 +1,7 @@
 var eventInfoQuery = new Parse.Query("EventInformation");
 var classInfoQuery = new Parse.Query("SignUp");
 
+var classes = ["madison-phoenix", "madison-tempe", "trucycle", "rpm-spin"];
 var classCounts = {total: 0};
 var eventInformation;
 
@@ -36,7 +37,6 @@ var setEventInformation = function(eventInfo){
 * Queries a count for each spinClass SignUp object from Parse.
 */
 var updateClassCounts = function() {
-  var classes = ["madison-phoenix", "madison-tempe", "trucycle", "rpm-spin"];
   var promises = [];
   $.each(classes, function(index, value){
     delete classInfoQuery._where["spinClass"];
@@ -75,7 +75,7 @@ var removeBikesOption = function(){
 */
 var updateClassAvailabilites = function(){
   $.each(classCounts, function(key, value){
-    if(value === 100){
+    if(value === eventInformation.get("bikesPerClass")){
       var original = $("select#spin-class").find("option[value="+key+"]").html();
       // set HTML before killing the value
       $("select#spin-class").find("option[value="+key+"]").html("SOLD OUT: " + original);

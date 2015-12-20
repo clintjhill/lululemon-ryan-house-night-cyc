@@ -22325,6 +22325,7 @@ var EventInformation = Parse.Object.extend("EventInformation", {
 var eventInfoQuery = new Parse.Query("EventInformation");
 var classInfoQuery = new Parse.Query("SignUp");
 
+var classes = ["madison-phoenix", "madison-tempe", "trucycle", "rpm-spin"];
 var classCounts = {total: 0};
 var eventInformation;
 
@@ -22360,7 +22361,6 @@ var setEventInformation = function(eventInfo){
 * Queries a count for each spinClass SignUp object from Parse.
 */
 var updateClassCounts = function() {
-  var classes = ["madison-phoenix", "madison-tempe", "trucycle", "rpm-spin"];
   var promises = [];
   $.each(classes, function(index, value){
     delete classInfoQuery._where["spinClass"];
@@ -22376,13 +22376,15 @@ var updateClassCounts = function() {
       }
     }));
   });
-  Parse.Promise.when(promises).then(function(){
-    if(classCounts.total < 400){
-      updateClassAvailabilites();
-    } else {
-      removeBikesOption();
-    }
-  });
+  Parse.Promise.when(promises).then(showAvailableOrRemoveBikes);
+}
+
+var showAvailableOrRemoveBikes = function(){
+  if(classCounts.total < 400){
+    updateClassAvailabilites();
+  } else {
+    removeBikesOption();
+  }
 }
 
 var removeBikesOption = function(){
@@ -22397,7 +22399,7 @@ var removeBikesOption = function(){
 */
 var updateClassAvailabilites = function(){
   $.each(classCounts, function(key, value){
-    if(value === 100){
+    if(value === eventInformation.get("bikesPerClass")){
       var original = $("select#spin-class").find("option[value="+key+"]").html();
       // set HTML before killing the value
       $("select#spin-class").find("option[value="+key+"]").html("SOLD OUT: " + original);
@@ -22410,7 +22412,8 @@ var updateClassAvailabilites = function(){
 * Updates the event information up to Parse.
 */
 var updateEventInformation = function(signUp){
-  var newAmount = eventInformation.get("totalAmountRaisedInCents") + signUp.donationAmountInCents;
+  var currentAmount = eventInformation.get("totalAmountRaisedInCents") || 0;
+  var newAmount = currentAmount + signUp.donationAmountInCents;
   eventInformation.set("totalAmountRaisedInCents", newAmount);
   if(signUp.spinClass){
     eventInformation.increment("participants");
