@@ -5,3 +5,5 @@ gem "rack-ssl"
 gem "sinatra"
 gem "sinatra-contrib"
 gem "stripe"
+gem "sendgrid-ruby"
+gem 'parse-ruby-client', git: 'https://github.com/adelevie/parse-ruby-client.git'

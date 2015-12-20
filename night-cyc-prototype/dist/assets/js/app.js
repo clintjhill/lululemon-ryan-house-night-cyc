@@ -22363,10 +22363,16 @@ var updateClassCounts = function() {
     delete classInfoQuery._where["spinClass"];
     var spinClass = classes[index];
     classInfoQuery.equalTo("spinClass", spinClass);
-    promises.push(classInfoQuery.count({
-      success: function(count) {
+    promises.push(classInfoQuery.find({
+      success: function(results) {
+        var thisClass = results[0].spinClass;
+        var count = results.length;
+        var frontRow = 0;
         classCounts.total += count;
-        classCounts[spinClass] = count;
+        for (var i = 0; i < count; i++) {
+          frontRow += (results[i].frontRow) ? 1 : 0;
+        }
+        classCounts[thisClass] = {count: count, frontRow: frontRow};
       },
       error: function(err) {
         console.log("Failed to get counts.", err);
@@ -22377,7 +22383,7 @@ var updateClassCounts = function() {
 }
 
 var showAvailableOrRemoveBikes = function(){
-  if(classCounts.total < 400){
+  if(classCounts.total < eventInformation.get("totalBikes")){
     updateClassAvailabilites();
   } else {
     removeBikesOption();
@@ -22396,7 +22402,7 @@ var removeBikesOption = function(){
 */
 var updateClassAvailabilites = function(){
   $.each(classCounts, function(key, value){
-    if(value === eventInformation.get("bikesPerClass")){
+    if(value.count === eventInformation.get("bikesPerClass")){
       var original = $("select#spin-class").find("option[value="+key+"]").html();
       // set HTML before killing the value
       $("select#spin-class").find("option[value="+key+"]").html("SOLD OUT: " + original);
@@ -22455,6 +22461,23 @@ var signUpEmail = function(){
 
 var signUpDonation = function(){
   return accounting.unformat($("#donation-total").html()) * 100; // converted to cents
+}
+
+var changeClass = function(){
+  showFrontRowAvailable();
+  updateDonationForBikeFee();
+}
+
+var showFrontRowAvailable = function(){
+  var selectedClass = $("#spin-class").val();
+  if(selectedClass.length > 0){
+    var frontRowCount = classCounts[selectedClass].frontRow;
+    if(frontRowCount === eventInformation.get("frontRowPerClass")){
+      $("#front-row").prop("disabled", true);
+      $("#front-row").find("option[value='']").html("Sold Out!");
+      $("#front-row").find("option[value='']").prop("selected", "selected");
+    }
+  }
 }
 
 /**
@@ -22595,7 +22618,7 @@ Stripe.setPublishableKey('pk_test_mnb2K52AawVfeFUmcuEV7CjJ');
 $(document).foundation();
 $(document).ready(function(){
   $("form#sign-up").on('submit', signup);
-  $("select#spin-class").on('change', updateDonationForBikeFee);
+  $("select#spin-class").on('change', changeClass);
   $("select#front-row").on('change', updateDonationForBikeFee);
   $("input#extra-donation").on('change', updateDonationForBikeFee);
   $("input#donation").on('change', updateDonationForStraightFee);
