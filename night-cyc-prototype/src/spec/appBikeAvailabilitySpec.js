@@ -37,9 +37,9 @@ describe("app bike availability", function(){
 
       spinClass = $("select#spin-class");
       window.classCounts = {
-        "madison-tempe": 5,
-        "madison-phx": 10,
-        "rpm-spin": 20
+        "madison-tempe": { count: 5, frontRow: 2 },
+        "madison-phx": { count: 10, frontRow: 1 },
+        "rpm-spin": { count: 20, frontRow: 0 }
       };
       window.updateClassAvailabilites();
     });
@@ -65,9 +65,9 @@ describe("app bike availability", function(){
 
       spinClass = $("select#spin-class");
       window.classCounts = {
-        "madison-tempe": 5,
-        "madison-phx": 60,
-        "rpm-spin": 20
+        "madison-tempe": { count: 5, frontRow: 0 },
+        "madison-phx": { count: 60, frontRow: 0 },
+        "rpm-spin": { count: 20, frontRow: 1 }
       };
       madisonTempe = spinClass.find("option[value=madison-tempe]");
       madisonPhoenix = spinClass.find("option[value=madison-phx]");

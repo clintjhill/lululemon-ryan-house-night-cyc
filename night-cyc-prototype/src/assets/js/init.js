@@ -8,7 +8,7 @@ Stripe.setPublishableKey('pk_test_mnb2K52AawVfeFUmcuEV7CjJ');
 $(document).foundation();
 $(document).ready(function(){
   $("form#sign-up").on('submit', signup);
-  $("select#spin-class").on('change', updateDonationForBikeFee);
+  $("select#spin-class").on('change', changeClass);
   $("select#front-row").on('change', updateDonationForBikeFee);
   $("input#extra-donation").on('change', updateDonationForBikeFee);
   $("input#donation").on('change', updateDonationForStraightFee);

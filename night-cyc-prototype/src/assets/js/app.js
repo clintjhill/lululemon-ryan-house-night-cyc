@@ -42,10 +42,16 @@ var updateClassCounts = function() {
     delete classInfoQuery._where["spinClass"];
     var spinClass = classes[index];
     classInfoQuery.equalTo("spinClass", spinClass);
-    promises.push(classInfoQuery.count({
-      success: function(count) {
+    promises.push(classInfoQuery.find({
+      success: function(results) {
+        var thisClass = results[0].spinClass;
+        var count = results.length;
+        var frontRow = 0;
         classCounts.total += count;
-        classCounts[spinClass] = count;
+        for (var i = 0; i < count; i++) {
+          frontRow += (results[i].frontRow) ? 1 : 0;
+        }
+        classCounts[thisClass] = {count: count, frontRow: frontRow};
       },
       error: function(err) {
         console.log("Failed to get counts.", err);
@@ -75,7 +81,7 @@ var removeBikesOption = function(){
 */
 var updateClassAvailabilites = function(){
   $.each(classCounts, function(key, value){
-    if(value === eventInformation.get("bikesPerClass")){
+    if(value.count === eventInformation.get("bikesPerClass")){
       var original = $("select#spin-class").find("option[value="+key+"]").html();
       // set HTML before killing the value
       $("select#spin-class").find("option[value="+key+"]").html("SOLD OUT: " + original);
@@ -134,6 +140,23 @@ var signUpEmail = function(){
 
 var signUpDonation = function(){
   return accounting.unformat($("#donation-total").html()) * 100; // converted to cents
+}
+
+var changeClass = function(){
+  showFrontRowAvailable();
+  updateDonationForBikeFee();
+}
+
+var showFrontRowAvailable = function(){
+  var selectedClass = $("#spin-class").val();
+  if(selectedClass.length > 0){
+    var frontRowCount = classCounts[selectedClass].frontRow;
+    if(frontRowCount === 18){
+      $("#front-row").prop("disabled", true);
+      $("#front-row").find("option[value='']").html("Sold Out!");
+      $("#front-row").find("option[value='']").prop("selected", "selected");
+    }
+  }
 }
 
 /**
