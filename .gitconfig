@@ -1,0 +1,10 @@
+# This is Git's per-user configuration file.
+[core]
+[alias]
+  st = status
+  ci = commit
+[push]
+	default = simple
+[user]
+	name = Clint Hill
+	email = clint.hill@gmail.com
