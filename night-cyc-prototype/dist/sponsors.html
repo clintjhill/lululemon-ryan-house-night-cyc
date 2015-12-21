@@ -5,18 +5,40 @@
     <meta charset="utf-8" />
     <meta http-equiv="x-ua-compatible" content="ie=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta property="fb:app_id"                 content="1681966272090508" />
+    <meta property="og:url"                content="https://www.lululemonnightcyc.com" />
+    <meta property="og:type"               content="fitness.course" />
+    <meta property="og:title"              content="lululemon Night Cyc benefiting Ryan House" />
+    <meta property="og:description"        content="Fueling our happiness through the gift of giving" />
+    <meta property="og:image"              content="https://www.lululemonnightcyc.com/assets/img/night-cyc-logo.png" />
     <title>Ryan House Night Cyc!</title>
     <link rel="stylesheet" href="/assets/css/app.css">
     <script type="text/javascript" src="https://js.stripe.com/v2/"></script>
   </head>
   <body>
+    <script>
+      window.fbAsyncInit = function() {
+        FB.init({
+          appId      : '1681966272090508',
+          xfbml      : true,
+          version    : 'v2.5'
+        });
+      };
+
+      (function(d, s, id){
+         var js, fjs = d.getElementsByTagName(s)[0];
+         if (d.getElementById(id)) {return;}
+         js = d.createElement(s); js.id = id;
+         js.src = "//connect.facebook.net/en_US/sdk.js";
+         fjs.parentNode.insertBefore(js, fjs);
+       }(document, 'script', 'facebook-jssdk'));
+    </script>
     <header class="header">
       <ul class="header-subnav">
 
         <li><a href="/">Home</a></li>
         <li><a href="/location">Location</a></li>
         <li><a href="/signup">Sign Up</a></li>
-        <li><a href="/sponsors">Sponsors</a></li>
 
       </ul>
     </header>
@@ -33,7 +55,6 @@
             <a href="/">Home</a>
             <a href="/location">Location</a>
             <a href="/signup">Sign Up</a>
-            <a href="/sponsors">Sponsors</a>
           </p>
           <p class="copywrite">Fueling our happiness through the gift of giving</p>
         </div>
