@@ -22333,14 +22333,18 @@ var updateClassCounts = function() {
     classInfoQuery.equalTo("spinClass", spinClass);
     promises.push(classInfoQuery.find({
       success: function(results) {
-        var thisClass = results[0].spinClass;
-        var count = results.length;
-        var frontRow = 0;
-        classCounts.total += count;
-        for (var i = 0; i < count; i++) {
-          frontRow += (results[i].frontRow) ? 1 : 0;
+        if(results.length > 0){
+          var thisClass = results[0].get("spinClass");
+          var count = results.length;
+          var frontRow = 0;
+          classCounts.total += count;
+          for (var i = 0; i < count; i++) {
+            frontRow += (results[i].get("frontRow")) ? 1 : 0;
+          }
+          classCounts[thisClass] = {count: count, frontRow: frontRow};
+        } else {
+          classCounts[spinClass] = {count: 0, frontRow: 0};
         }
-        classCounts[thisClass] = {count: count, frontRow: frontRow};
       },
       error: function(err) {
         console.log("Failed to get counts.", err);
@@ -22531,7 +22535,7 @@ var makePayment = function(paymentObject){
 
 var handlePaymentResponse = function(response){
   if(response.status == "succeeded" || response.paid == true){
-    goToPage("/thanks/" + currentSignup.get("objectId"));
+    goToPage("/thanks/" + currentSignup.id);
   } else {
     goToPage("/failed");
   }
