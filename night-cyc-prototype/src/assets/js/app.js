@@ -238,13 +238,15 @@ var handleTokenResponseAndMakePayment = function(status, response){
 * Sending the payment object our payment API.
 */
 var makePayment = function(paymentObject){
-  $.post('/api/donation', paymentObject, function(response){
-    if(response.status == "succeeded" || response.paid == true){
-      goToPage("/thanks/" + currentSignup.get("objectId"));
-    } else {
-      goToPage("/failed");
-    }
-  });
+  $.post('/api/donation', paymentObject, handlePaymentResponse);
+}
+
+var handlePaymentResponse = function(response){
+  if(response.status == "succeeded" || response.paid == true){
+    goToPage("/thanks/" + currentSignup.get("objectId"));
+  } else {
+    goToPage("/failed");
+  }
 }
 
 var signUpObject = function(){
