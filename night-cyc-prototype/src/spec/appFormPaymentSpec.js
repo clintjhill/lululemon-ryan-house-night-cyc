@@ -19,7 +19,7 @@ describe("app form payment", function(){
         email: "clint.hill@gmail.com",
         donation: 390000
       });
-      window.currentSignup = {get: function(){ return "testing"; }}
+      window.currentSignup = {id: "testing" };
     });
 
     it("should post payment for success", function(){

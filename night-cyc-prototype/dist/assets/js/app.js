@@ -9431,9 +9431,10 @@ return jQuery;
 }));
 
 !function($) {
+
 "use strict";
 
-var FOUNDATION_VERSION = '6.0.6';
+var FOUNDATION_VERSION = '6.0.5';
 
 // Global Foundation object
 // This is attached to the window, or used as a module for AMD/Browserify
@@ -9487,15 +9488,12 @@ var Foundation = {
     var pluginName = functionName(plugin.constructor).toLowerCase();
 
     plugin.uuid = this.GetYoDigits(6, pluginName);
-
-    if(!plugin.$element.attr('data-' + pluginName)){
-      plugin.$element.attr('data-' + pluginName, plugin.uuid);
-    }
+    plugin.$element.attr('data-' + pluginName, plugin.uuid)
           /**
            * Fires when the plugin has initialized.
            * @event Plugin#init
            */
-    plugin.$element.trigger('init.zf.' + pluginName);
+          .trigger('init.zf.' + pluginName);
 
     this._activePlugins[plugin.uuid] = plugin;
 
@@ -9575,7 +9573,6 @@ var Foundation = {
    * @param {String|Array} plugins - A list of plugins to initialize. Leave this out to initialize everything.
    */
   reflow: function(elem, plugins) {
-
     // If plugins is undefined, just grab everything
     if (typeof plugins === 'undefined') {
       plugins = Object.keys(this._plugins);
@@ -9593,14 +9590,14 @@ var Foundation = {
       var plugin = _this._plugins[name];
 
       // Localize the search to all elements inside elem, as well as elem itself, unless elem === document
-      var $elem = $(elem).find('[data-'+name+']').addBack('[data-'+name+']');
+      var $elem = $(elem).find('[data-'+name+']').addBack('*');
 
       // For each plugin found, initialize it
       $elem.each(function() {
         var $el = $(this),
             opts = {};
         // Don't double-dip on plugins
-        if ($el.data('zf-plugin')) {
+        if ($el.attr('zf-plugin')) {
           console.warn("Tried to initialize "+name+" on an element that already has a Foundation plugin.");
           return;
         }
@@ -9611,13 +9608,7 @@ var Foundation = {
             if(opt[0]) opts[opt[0]] = parseValue(opt[1]);
           });
         }
-        try{
-          $el.data('zf-plugin', new plugin($(this), opts));
-        }catch(er){
-          console.error(er);
-        }finally{
-          return;
-        }
+        $el.data('zf-plugin', new plugin($(this), opts));
       });
     });
   },
@@ -10298,7 +10289,7 @@ function parseStyleToObject(str) {
   return styleObject;
 }
 
-}(jQuery, Foundation);
+}(jQuery, Foundation)
 
 /**
  * Motion module.
@@ -11234,14 +11225,6 @@ Foundation.Motion = Motion;
           return true;
         }
         break;
-        case 'password':
-        if ($el.attr('required') && !$el.val()) {
-          // requirement check does not pass
-          return false;
-        } else {
-          return true;
-        }
-        break;
       case 'checkbox':
         if ($el.attr('required') && !$el.is(':checked')) {
           return false;
@@ -11328,7 +11311,6 @@ Foundation.Motion = Motion;
   Abide.prototype.validateInput = function($el, $form) {
     var self = this,
         textInput = $form.find('input[type="text"]'),
-        passwordInput = $form.find('input[type="password"]'),
         checkInput = $form.find('input[type="checkbox"]'),
         label,
         radioGroupName;
@@ -11556,9 +11538,6 @@ Foundation.Motion = Motion;
   Accordion.prototype._init = function() {
     this.$element.attr('role', 'tablist');
     this.$tabs = this.$element.children('li');
-    if (this.$tabs.length == 0) {
-      this.$tabs = this.$element.children('[data-accordion-item]');
-    }
     this.$tabs.each(function(idx, el){
 
       var $el = $(el),
@@ -11661,13 +11640,13 @@ Foundation.Motion = Motion;
       .addBack()
       .parent().addClass('is-active');
 
-    // Foundation.Move(_this.options.slideSpeed, $target, function(){
+    Foundation.Move(_this.options.slideSpeed, $target, function(){
       $target.slideDown(_this.options.slideSpeed);
-    // });
+    });
 
-    // if(!firstTime){
-    //   Foundation._reflow(this.$element.attr('data-accordion'));
-    // }
+    if(!firstTime){
+      Foundation._reflow(this.$element.attr('data-accordion'));
+    }
     $('#' + $target.attr('aria-labelledby')).attr({
       'aria-expanded': true,
       'aria-selected': true
@@ -11694,9 +11673,9 @@ Foundation.Motion = Motion;
       return;
     }
 
-    // Foundation.Move(this.options.slideSpeed, $target, function(){
+    Foundation.Move(this.options.slideSpeed, $target, function(){
       $target.slideUp(_this.options.slideSpeed);
-    // });
+    });
 
     $target.attr('aria-hidden', true)
            .parent().removeClass('is-active');
@@ -11917,13 +11896,11 @@ Foundation.Motion = Motion;
    * @param {jQuery} $target - the submenu to toggle
    */
   AccordionMenu.prototype.toggle = function($target){
-    if(!$target.is(':animated')) {
-      if (!$target.is(':hidden')) {
-        this.up($target);
-      }
-      else {
-        this.down($target);
-      }
+    if (!$target.is(':hidden')) {
+      this.up($target);
+    }
+    else {
+      this.down($target);
     }
   };
   /**
@@ -11992,7 +11969,7 @@ Foundation.Motion = Motion;
 }(jQuery, window.Foundation);
 
 /**
- * Parse JavaScript SDK v1.6.13
+ * Parse JavaScript SDK v1.6.9
  *
  * The source tree of this library can be found at
  *   https://github.com/ParsePlatform/Parse-SDK-JS
@@ -12213,8 +12190,8 @@ var config = {
   // Defaults
   IS_NODE: typeof process !== 'undefined' && !!process.versions && !!process.versions.node,
   REQUEST_ATTEMPT_LIMIT: 5,
-  SERVER_URL: 'https://api.parse.com/1',
-  VERSION: 'js' + '1.6.13',
+  SERVER_URL: 'https://api.parse.com',
+  VERSION: '1.6.9',
   APPLICATION_ID: null,
   JAVASCRIPT_KEY: null,
   MASTER_KEY: null,
@@ -14472,10 +14449,7 @@ _CoreManager2['default'].setFileController({
       'X-Parse-JavaScript-Key': _CoreManager2['default'].get('JAVASCRIPT_KEY')
     };
     var url = _CoreManager2['default'].get('SERVER_URL');
-    if (url[url.length - 1] !== '/') {
-      url += '/';
-    }
-    url += 'files/' + name;
+    url += '/1/files/' + name;
     return _CoreManager2['default'].getRESTController().ajax('POST', url, source.file, headers);
   },
 
@@ -15132,8 +15106,6 @@ var ParseObject = (function () {
       for (attr in response) {
         if ((attr === 'createdAt' || attr === 'updatedAt') && typeof response[attr] === 'string') {
           changes[attr] = (0, _parseDate2['default'])(response[attr]);
-        } else if (attr === 'ACL') {
-          changes[attr] = new _ParseACL2['default'](response[attr]);
         } else if (attr !== 'objectId') {
           changes[attr] = (0, _decode2['default'])(response[attr]);
         }
@@ -17476,7 +17448,7 @@ var ParsePromise = (function () {
   }], [{
     key: 'is',
     value: function is(promise) {
-      return promise != null && typeof promise.then === 'function';
+      return typeof promise !== 'undefined' && typeof promise.then === 'function';
     }
 
     /**
@@ -17538,8 +17510,10 @@ var ParsePromise = (function () {
      *
      * The input promises can also be specified as an array: <pre>
      *   var promises = [p1, p2, p3];
-     *   Parse.Promise.when(promises).then(function(results) {
-     *     console.log(results);  // prints [1,2,3]
+     *   Parse.Promise.when(promises).then(function(r1, r2, r3) {
+     *     console.log(r1);  // prints 1
+     *     console.log(r2);  // prints 2
+     *     console.log(r3);  // prints 3
      *   });
      * </pre>
      * @method when
@@ -17706,7 +17680,8 @@ function quote(s) {
  * Creates a new parse Parse.Query for the given Parse.Object subclass.
  * @class Parse.Query
  * @constructor
- * @param {} objectClass An instance of a subclass of Parse.Object, or a Parse className string.
+ * @param objectClass -
+ *   An instance of a subclass of Parse.Object, or a Parse className string.
  *
  * <p>Parse.Query defines a query that is used to fetch Parse.Objects. The
  * most common use case is finding all objects that match a query through the
@@ -17935,9 +17910,7 @@ var ParseQuery = (function () {
 
       return controller.find(this.className, this.toJSON(), findOptions).then(function (response) {
         return response.results.map(function (data) {
-          if (!data.className) {
-            data.className = _this.className;
-          }
+          data.className = _this.className;
           return _ParseObject2['default'].fromJSON(data);
         });
       })._thenRunCallbacks(options);
@@ -18031,9 +18004,7 @@ var ParseQuery = (function () {
         if (!objects[0]) {
           return undefined;
         }
-        if (!objects[0].className) {
-          objects[0].className = _this2.className;
-        }
+        objects[0].className = _this2.className;
         return _ParseObject2['default'].fromJSON(objects[0]);
       })._thenRunCallbacks(options);
     }
@@ -20093,11 +20064,10 @@ var ParseUser = (function (_ParseObject) {
     value: function _registerAuthenticationProvider(provider) {
       authProviders[provider.getAuthType()] = provider;
       // Synchronize the current user with the auth provider.
-      ParseUser.currentAsync().then(function (current) {
-        if (current) {
-          current._synchronizeAuthData(provider.getAuthType());
-        }
-      });
+      var current = ParseUser.current();
+      if (current) {
+        current._synchronizeAuthData(provider.getAuthType());
+      }
     }
   }, {
     key: '_logInWith',
@@ -20559,10 +20529,7 @@ var RESTController = {
   request: function request(method, path, data, options) {
     options = options || {};
     var url = _CoreManager2['default'].get('SERVER_URL');
-    if (url[url.length - 1] !== '/') {
-      url += '/';
-    }
-    url += path;
+    url += '/1/' + path;
 
     var payload = {};
     if (data && typeof data === 'object') {
@@ -20578,7 +20545,7 @@ var RESTController = {
 
     payload._ApplicationId = _CoreManager2['default'].get('APPLICATION_ID');
     payload._JavaScriptKey = _CoreManager2['default'].get('JAVASCRIPT_KEY');
-    payload._ClientVersion = _CoreManager2['default'].get('VERSION');
+    payload._ClientVersion = 'js' + _CoreManager2['default'].get('VERSION');
 
     var useMasterKey = options.useMasterKey;
     if (typeof useMasterKey === 'undefined') {
@@ -22325,6 +22292,7 @@ var classInfoQuery = new Parse.Query("SignUp");
 var classes = ["madison-phoenix", "madison-tempe-1", "madison-tempe-2", "trucycle", "rpm-spin"];
 var classCounts = {total: 0};
 var eventInformation;
+var currentSignup;
 
 /**
 * Sets the event information in the view. Not up to Parse.
@@ -22558,13 +22526,15 @@ var handleTokenResponseAndMakePayment = function(status, response){
 * Sending the payment object our payment API.
 */
 var makePayment = function(paymentObject){
-  $.post('/api/donation', paymentObject, function(response){
-    if(response.status == "succeeded" || response.paid == true){
-      goToPage("/thanks");
-    } else {
-      goToPage("/failed");
-    }
-  });
+  $.post('/api/donation', paymentObject, handlePaymentResponse);
+}
+
+var handlePaymentResponse = function(response){
+  if(response.status == "succeeded" || response.paid == true){
+    goToPage("/thanks/" + currentSignup.get("objectId"));
+  } else {
+    goToPage("/failed");
+  }
 }
 
 var signUpObject = function(){
@@ -22581,6 +22551,7 @@ var saveSignUp = function(signUp){
   var su = signUpObject();
   su.save(signUp, {
     success: function(signedUp){
+      currentSignup = signedUp;
       updateEventInformation(signUp);
       Stripe.card.createToken($("form#sign-up"), handleTokenResponseAndMakePayment);
     },

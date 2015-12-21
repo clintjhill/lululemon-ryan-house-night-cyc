@@ -243,7 +243,7 @@ var makePayment = function(paymentObject){
 
 var handlePaymentResponse = function(response){
   if(response.status == "succeeded" || response.paid == true){
-    goToPage("/thanks/" + currentSignup.get("objectId"));
+    goToPage("/thanks/" + currentSignup.id);
   } else {
     goToPage("/failed");
   }
