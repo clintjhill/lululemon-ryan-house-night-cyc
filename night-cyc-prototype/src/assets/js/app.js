@@ -4,6 +4,7 @@ var classInfoQuery = new Parse.Query("SignUp");
 var classes = ["madison-phoenix", "madison-tempe-1", "madison-tempe-2", "trucycle", "rpm-spin"];
 var classCounts = {total: 0};
 var eventInformation;
+var currentSignup;
 
 /**
 * Sets the event information in the view. Not up to Parse.
@@ -239,7 +240,7 @@ var handleTokenResponseAndMakePayment = function(status, response){
 var makePayment = function(paymentObject){
   $.post('/api/donation', paymentObject, function(response){
     if(response.status == "succeeded" || response.paid == true){
-      goToPage("/thanks");
+      goToPage("/thanks/" + currentSignup.get("objectId"));
     } else {
       goToPage("/failed");
     }
@@ -260,6 +261,7 @@ var saveSignUp = function(signUp){
   var su = signUpObject();
   su.save(signUp, {
     success: function(signedUp){
+      currentSignup = signedUp;
       updateEventInformation(signUp);
       Stripe.card.createToken($("form#sign-up"), handleTokenResponseAndMakePayment);
     },

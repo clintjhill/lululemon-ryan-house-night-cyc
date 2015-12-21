@@ -25,6 +25,8 @@ describe("app form payment", function(){
         email: "clint.hill@gmail.com",
         donation: 390000
       });
+
+      expect(window.goToPage).toHaveBeenCalledWith("/thanks/testing");
     });
 
     it("should go to failed page on error", function(){
