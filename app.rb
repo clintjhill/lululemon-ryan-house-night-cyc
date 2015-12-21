@@ -5,11 +5,15 @@ require 'stripe'
 require 'sendgrid-ruby'
 require 'parse-ruby-client'
 
-mail_client = SendGrid::Client.new(api_user: ENV['SENDGRID_USERNAME'], api_key: ENV['SENDGRID_PASSWORD'])
+mail_client = SendGrid::Client.new(
+  api_user: ENV['SENDGRID_USERNAME'],
+  api_key: ENV['SENDGRID_PASSWORD']
+)
+
 parse_client = Parse.create(
-  :application_id => 'oHvIaEjqPA5s3QiQ2DYtT6TxXBhOU97V1EzMptQD',
-  :api_key => 'P6YuIabUKugI8FkdKHCo3f2B2SPa87OD9VQT2gSR'
-  )
+  :application_id => ENV['PARSE_APPID'],
+  :api_key => ENV['PARSE_APIKEY']
+)
 
 if ENV['RACK_ENV'] == 'production'
   use Rack::SSL
