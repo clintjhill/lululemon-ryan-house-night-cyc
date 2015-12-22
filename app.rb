@@ -27,7 +27,7 @@ if ENV['RACK_ENV'] == 'production'
   use Rack::SSL
 end
 
-Stripe.api_key = "sk_test_Abv2iJvMxL9IP9CxPnii4re6"
+Stripe.api_key = "sk_live_aVs99614hJStKMkhn15m2iTl"
 
 set :public_folder, './night-cyc-prototype/dist'
 
