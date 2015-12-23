@@ -27,7 +27,7 @@ if ENV['RACK_ENV'] == 'production'
   use Rack::SSL
 end
 
-Stripe.api_key = "sk_live_aVs99614hJStKMkhn15m2iTl"
+Stripe.api_key = ENV['STRIPE_KEY']
 
 set :public_folder, './night-cyc-prototype/dist'
 
@@ -67,11 +67,17 @@ get '/thanks/:objectId' do
   signup_query.eq("objectId", params["objectId"])
   signup = signup_query.get.first
 
+  if signup["spinClass"].nil? || signup["spinClass"].empty?
+    body = "Thanks for donating $#{signup["donationAmountInCents"]/100}! Please join us for Music and Dance. You have a special unique id: #{signup.id}."
+  else
+    body = "Thanks for signing up and donating $#{signup["donationAmountInCents"]/100}! You're scheduled to ride in the #{classes[signup["spinClass"]]} class. You have a special unique id: #{signup.id}."
+  end
+
   mail = SendGrid::Mail.new do |m|
     m.to = signup["email"]
-    m.from = 'signups@lululemonnightcyc.com'
+    m.from = 'signups@nightcyc.com'
     m.subject = signup["email"]
-    m.text = "Thanks for signing up and donating $#{signup["donationAmountInCents"]/100}! You're scheduled to ride in the #{classes[signup["spinClass"]]} class. You have a special unique id: #{signup.id}."
+    m.text = body
     m.template = SendGrid::Template.new('00a1db15-0c56-4dc5-bb9d-a1dfbe676ab5')
   end
   mail_client.send(mail)
