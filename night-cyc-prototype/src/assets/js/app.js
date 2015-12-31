@@ -1,7 +1,7 @@
 var eventInfoQuery = new Parse.Query("EventInformation");
 var classInfoQuery = new Parse.Query("SignUp");
 
-var classes = ["madison-phoenix", "madison-tempe-1", "madison-tempe-2", "trucycle", "rpm-spin"];
+var classes = ["madison-phoenix", "madison-tempe-1", "madison-tempe-2", "amb-bad-ass", "rpm-spin"];
 var classCounts = {total: 0};
 var eventInformation;
 var currentSignup;

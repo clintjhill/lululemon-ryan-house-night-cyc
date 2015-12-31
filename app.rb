@@ -20,7 +20,7 @@ classes = {
   "madison-tempe-1" => "The Madison (Tempe) @ 3-4pm",
   "madison-tempe-2" => "The Madison (Tempe) @ 7-8pm",
   "rpm-spin" => "rpm spin @ 6-7pm",
-  "trucycle" => "TruCycle @ 4-5pm"
+  "amb-bad-ass" => "Ambassador Bad Asses @ 4-5pm"
 }
 
 if ENV['RACK_ENV'] == 'production'
