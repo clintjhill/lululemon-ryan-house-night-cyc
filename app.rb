@@ -19,7 +19,7 @@ classes = {
   "madison-phoenix" => "The Madison (Phoenix) @ 5-6pm",
   "madison-tempe-1" => "The Madison (Tempe) @ 3-4pm",
   "madison-tempe-2" => "The Madison (Tempe) @ 7-8pm",
-  "rpm-spin" => "rpm spin @ 6-7pm",
+  "rpm-spin" => "RPM spin @ 6-7pm",
   "amb-bad-ass" => "Ambassador Bad Asses @ 4-5pm"
 }
 

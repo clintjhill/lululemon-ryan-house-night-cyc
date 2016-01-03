@@ -9431,9 +9431,10 @@ return jQuery;
 }));
 
 !function($) {
+
 "use strict";
 
-var FOUNDATION_VERSION = '6.1.1';
+var FOUNDATION_VERSION = '6.0.5';
 
 // Global Foundation object
 // This is attached to the window, or used as a module for AMD/Browserify
@@ -9483,19 +9484,18 @@ var Foundation = {
    * @param {Object} plugin - an instance of a plugin, usually `this` in context.
    * @fires Plugin#init
    */
-  registerPlugin: function(plugin, name){
-    var pluginName = name ? hyphenate(name) : functionName(plugin.constructor).toLowerCase();
-    plugin.uuid = this.GetYoDigits(6, pluginName);
+  registerPlugin: function(plugin){
+    var pluginName = functionName(plugin.constructor).toLowerCase();
 
-    if(!plugin.$element.attr('data-' + pluginName)){ plugin.$element.attr('data-' + pluginName, plugin.uuid); }
-    if(!plugin.$element.data('zfPlugin')){ plugin.$element.data('zfPlugin', plugin); }
+    plugin.uuid = this.GetYoDigits(6, pluginName);
+    plugin.$element.attr('data-' + pluginName, plugin.uuid)
           /**
            * Fires when the plugin has initialized.
            * @event Plugin#init
            */
-    plugin.$element.trigger('init.zf.' + pluginName);
+          .trigger('init.zf.' + pluginName);
 
-    this._uuids.push(plugin.uuid);
+    this._activePlugins[plugin.uuid] = plugin;
 
     return;
   },
@@ -9507,18 +9507,16 @@ var Foundation = {
    * @fires Plugin#destroyed
    */
   unregisterPlugin: function(plugin){
-    var pluginName = hyphenate(functionName(plugin.$element.data('zfPlugin').constructor));
+    var pluginName = functionName(plugin.constructor).toLowerCase();
 
-    this._uuids.splice(this._uuids.indexOf(plugin.uuid), 1);
-    plugin.$element.removeAttr('data-' + pluginName).removeData('zfPlugin')
+    delete this._activePlugins[plugin.uuid];
+    plugin.$element.removeAttr('data-' + pluginName)
           /**
            * Fires when the plugin has been destroyed.
            * @event Plugin#destroyed
            */
           .trigger('destroyed.zf.' + pluginName);
-    for(var prop in plugin){
-      plugin[prop] = null;//clean up script to prep for garbage collection.
-    }
+
     return;
   },
 
@@ -9528,37 +9526,34 @@ var Foundation = {
    * @param {String} plugins - optional string of an individual plugin key, attained by calling `$(element).data('pluginName')`, or string of a plugin class i.e. `'dropdown'`
    * @default If no argument is passed, reflow all currently active plugins.
    */
-   reInit: function(plugins){
-     var isJQ = plugins instanceof $;
-     try{
-       if(isJQ){
-         plugins.each(function(){
-           $(this).data('zfPlugin')._init();
-         });
-       }else{
-         var type = typeof plugins,
-         _this = this,
-         fns = {
-           'object': function(plgs){
-             plgs.forEach(function(p){
-               $('[data-'+ p +']').foundation('_init');
-             });
-           },
-           'string': function(){
-             $('[data-'+ plugins +']').foundation('_init');
-           },
-           'undefined': function(){
-             this['object'](Object.keys(_this._plugins));
-           }
-         };
-         fns[type](plugins);
-       }
-     }catch(err){
-       console.error(err);
-     }finally{
-       return plugins;
-     }
-   },
+  _reflow: function(plugins){
+    var actvPlugins = Object.keys(this._activePlugins);
+    var _this = this;
+
+    if(!plugins){
+      actvPlugins.forEach(function(p){
+        _this._activePlugins[p]._init();
+      });
+
+    }else if(typeof plugins === 'string'){
+      var namespace = plugins.split('-')[1];
+
+      if(namespace){
+
+        this._activePlugins[plugins]._init();
+
+      }else{
+        namespace = new RegExp(plugins, 'i');
+
+        actvPlugins.filter(function(p){
+          return namespace.test(p);
+        }).forEach(function(p){
+          _this._activePlugins[p]._init();
+        });
+      }
+    }
+
+  },
 
   /**
    * returns a random base-36 uid with namespacing
@@ -9578,7 +9573,6 @@ var Foundation = {
    * @param {String|Array} plugins - A list of plugins to initialize. Leave this out to initialize everything.
    */
   reflow: function(elem, plugins) {
-
     // If plugins is undefined, just grab everything
     if (typeof plugins === 'undefined') {
       plugins = Object.keys(this._plugins);
@@ -9596,14 +9590,14 @@ var Foundation = {
       var plugin = _this._plugins[name];
 
       // Localize the search to all elements inside elem, as well as elem itself, unless elem === document
-      var $elem = $(elem).find('[data-'+name+']').addBack('[data-'+name+']');
+      var $elem = $(elem).find('[data-'+name+']').addBack('*');
 
       // For each plugin found, initialize it
       $elem.each(function() {
         var $el = $(this),
             opts = {};
         // Don't double-dip on plugins
-        if ($el.data('zfPlugin')) {
+        if ($el.attr('zf-plugin')) {
           console.warn("Tried to initialize "+name+" on an element that already has a Foundation plugin.");
           return;
         }
@@ -9614,13 +9608,7 @@ var Foundation = {
             if(opt[0]) opts[opt[0]] = parseValue(opt[1]);
           });
         }
-        try{
-          $el.data('zfPlugin', new plugin($(this), opts));
-        }catch(er){
-          console.error(er);
-        }finally{
-          return;
-        }
+        $el.data('zf-plugin', new plugin($(this), opts));
       });
     });
   },
@@ -9798,7 +9786,7 @@ function functionName(fn) {
 function parseValue(str){
   if(/true/.test(str)) return true;
   else if(/false/.test(str)) return false;
-  else if(!isNaN(str * 1)) return parseFloat(str);
+  else if(!isNaN(str * 1)/* && typeof (str * 1) === "number"*/) return parseFloat(str);
   return str;
 }
 // Convert PascalCase to kebab-case
@@ -10001,10 +9989,7 @@ function hyphenate(str) {
     40: 'ARROW_DOWN'
   };
 
-  /*
-   * Constants for easier comparing.
-   * Can be used like Foundation.parseKey(event) === Foundation.keys.SPACE
-   */
+  // constants for easier comparing Can be used like Foundation.parseKey(event) === Foundation.keys.SPACE
   var keys = (function(kcs) {
     var k = {};
     for (var kc in kcs) k[kcs[kc]] = kcs[kc];
@@ -10035,11 +10020,11 @@ function hyphenate(str) {
   /**
    * Handles the given (keyboard) event
    * @param {Event} event - the event generated by the event handler
-   * @param {String} component - Foundation component's name, e.g. Slider or Reveal
+   * @param {Object} component - Foundation component, e.g. Slider or Reveal
    * @param {Objects} functions - collection of functions that are to be executed
    */
   var handleKey = function(event, component, functions) {
-    var commandList = commands[component],
+    var commandList = commands[Foundation.getFnName(component)],
       keyCode = parseKey(event),
       cmds,
       command,
@@ -10057,14 +10042,14 @@ function hyphenate(str) {
 
 
     fn = functions[command];
-    if (fn && typeof fn === 'function') { // execute function  if exists
-        fn.apply();
+    if (fn && typeof fn === 'function') { // execute function with context of the component if exists
+        fn.apply(component);
         if (functions.handled || typeof functions.handled === 'function') { // execute function when event was handled
-            functions.handled.apply();
+            functions.handled.apply(component);
         }
     } else {
         if (functions.unhandled || typeof functions.unhandled === 'function') { // execute function when event was not handled
-            functions.unhandled.apply();
+            functions.unhandled.apply(component);
         }
     }
   };
@@ -10304,7 +10289,7 @@ function parseStyleToObject(str) {
   return styleObject;
 }
 
-}(jQuery, Foundation);
+}(jQuery, Foundation)
 
 /**
  * Motion module.
@@ -10549,7 +10534,7 @@ Foundation.Motion = Motion;
   $.spotSwipe = {
     version: '1.0.0',
     enabled: 'ontouchstart' in document.documentElement,
-    preventDefault: false,
+    preventDefault: true,
     moveThreshold: 75,
     timeThreshold: 200
   };
@@ -10579,11 +10564,10 @@ Foundation.Motion = Motion;
       if(Math.abs(dx) >= $.spotSwipe.moveThreshold && elapsedTime <= $.spotSwipe.timeThreshold) {
         dir = dx > 0 ? 'left' : 'right';
       }
-      // else if(Math.abs(dy) >= $.spotSwipe.moveThreshold && elapsedTime <= $.spotSwipe.timeThreshold) {
-      //   dir = dy > 0 ? 'down' : 'up';
-      // }
+      else if(Math.abs(dy) >= $.spotSwipe.moveThreshold && elapsedTime <= $.spotSwipe.timeThreshold) {
+        dir = dy > 0 ? 'down' : 'up';
+      }
       if(dir) {
-        e.preventDefault();
         onTouchEnd.call(this);
         $(this).trigger('swipe', dir).trigger('swipe' + dir);
       }
@@ -11116,54 +11100,25 @@ Foundation.Motion = Motion;
   function Abide(element, options) {
     this.$element = element;
     this.options  = $.extend({}, Abide.defaults, this.$element.data(), options);
+    this.$window  = $(window);
+    this.name     = 'Abide';
+    this.attr     = 'data-abide';
 
     this._init();
+    this._events();
 
-    Foundation.registerPlugin(this, 'Abide');
+    Foundation.registerPlugin(this);
   }
 
   /**
    * Default settings for plugin
    */
   Abide.defaults = {
-    /**
-     * The default event to validate inputs. Checkboxes and radios validate immediately.
-     * Remove or change this value for manual validation.
-     * @option
-     * @example 'fieldChange'
-     */
-    validateOn: 'fieldChange',
-    /**
-     * Class to be applied to input labels on failed validation.
-     * @option
-     * @example 'is-invalid-label'
-     */
+    validateOn: 'fieldChange', // options: fieldChange, manual, submit
     labelErrorClass: 'is-invalid-label',
-    /**
-     * Class to be applied to inputs on failed validation.
-     * @option
-     * @example 'is-invalid-input'
-     */
     inputErrorClass: 'is-invalid-input',
-    /**
-     * Class selector to use to target Form Errors for show/hide.
-     * @option
-     * @example '.form-error'
-     */
     formErrorSelector: '.form-error',
-    /**
-     * Class added to Form Errors on failed validation.
-     * @option
-     * @example 'is-visible'
-     */
     formErrorClass: 'is-visible',
-    /**
-     * Set to true to validate text inputs on any value change.
-     * @option
-     * @example false
-     */
-    liveValidate: false,
-
     patterns: {
       alpha : /^[a-zA-Z]+$/,
       alpha_numeric : /^[a-zA-Z0-9]+$/,
@@ -11195,17 +11150,13 @@ Foundation.Motion = Motion;
       // #FFF or #FFFFFF
       color : /^#?([a-fA-F0-9]{6}|[a-fA-F0-9]{3})$/
     },
-    /**
-     * Optional validation functions to be used. `equalTo` being the only default included function.
-     * Functions should return only a boolean if the input is valid or not. Functions are given the following arguments:
-     * el : The jQuery element to validate.
-     * required : Boolean value of the required attribute be present or not.
-     * parent : The direct parent of the input.
-     * @option
-     */
     validators: {
       equalTo: function (el, required, parent) {
-        return $('#' + el.attr('data-equalto')).val() === el.val();
+        var from  = document.getElementById(el.getAttribute(this.add_namespace('data-equalto'))).value,
+            to    = el.value,
+            valid = (from === to);
+
+        return valid;
       }
     }
   };
@@ -11215,10 +11166,7 @@ Foundation.Motion = Motion;
    * Initializes the Abide plugin and calls functions to get Abide functioning on load.
    * @private
    */
-  Abide.prototype._init = function(){
-    this.$inputs = this.$element.find('input, textarea, select').not('[data-abide-ignore]');
-
-    this._events();
+  Abide.prototype._init = function() {
   };
 
   /**
@@ -11226,36 +11174,41 @@ Foundation.Motion = Motion;
    * @private
    */
   Abide.prototype._events = function() {
-    var _this = this;
-
-    this.$element.off('.abide')
-        .on('reset.zf.abide', function(e){
-          _this.resetForm();
+    var self = this;
+    this.$element
+      .off('.abide')
+      .on('reset.fndtn.abide', function(e) {
+        self.resetForm($(this));
+      })
+      .on('submit.fndtn.abide', function(e) {
+        e.preventDefault();
+        self.validateForm(self.$element);
+      })
+      .find('input, textarea, select')
+        .off('.abide')
+        .on('blur.fndtn.abide change.fndtn.abide', function (e) {
+          if (self.options.validateOn === 'fieldChange') {
+            self.validateInput($(e.target), self.$element);
+          }
+          // self.validateForm(self.$element);
         })
-        .on('submit.zf.abide', function(e){
-          return _this.validateForm();
+        .on('keydown.fndtn.abide', function (e) {
+          // if (settings.live_validate === true && e.which != 9) {
+          //   clearTimeout(self.timer);
+          //   self.timer = setTimeout(function () {
+          //     self.validate([this], e);
+          //   }.bind(this), settings.timeout);
+          // }
+          // self.validateForm(self.$element);
         });
 
-    if(this.options.validateOn === 'fieldChange'){
-        this.$inputs.off('change.zf.abide')
-            .on('change.zf.abide', function(e){
-              _this.validateInput($(this));
-            });
-    }
-
-    if(this.options.liveValidate){
-      this.$inputs.off('input.zf.abide')
-          .on('input.zf.abide', function(e){
-            _this.validateInput($(this));
-          });
-    }
   },
   /**
    * Calls necessary functions to update Abide upon DOM change
    * @private
    */
   Abide.prototype._reflow = function() {
-    this._init();
+    var self = this;
   };
   /**
    * Checks whether or not a form element has the required attribute and if it's checked or not
@@ -11263,251 +11216,256 @@ Foundation.Motion = Motion;
    * @returns {Boolean} Boolean value depends on whether or not attribute is checked or empty
    */
   Abide.prototype.requiredCheck = function($el) {
-    if(!$el.attr('required')) return true;
-    var isGood = true;
     switch ($el[0].type) {
-
+      case 'text':
+        if ($el.attr('required') && !$el.val()) {
+          // requirement check does not pass
+          return false;
+        } else {
+          return true;
+        }
+        break;
       case 'checkbox':
+        if ($el.attr('required') && !$el.is(':checked')) {
+          return false;
+        } else {
+          return true;
+        }
+        break;
       case 'radio':
-        isGood = $el[0].checked;
+        if ($el.attr('required') && !$el.is(':checked')) {
+          return false;
+        } else {
+          return true;
+        }
         break;
-
-      case 'select':
-      case 'select-one':
-      case 'select-multiple':
-        var opt = $el.find('option:selected');
-        if(!opt.length || !opt.val()) isGood = false;
-        break;
-
       default:
-        if(!$el.val() || !$el.val().length) isGood = false;
+        if ($el.attr('required') && (!$el.val() || !$el.val().length || $el.is(':empty'))) {
+          return false;
+        } else {
+          return true;
+        }
     }
-    return isGood;
   };
   /**
-   * Based on $el, get the first element with selector in this order:
-   * 1. The element's direct sibling('s).
-   * 3. The element's parent's children.
-   *
-   * This allows for multiple form errors per input, though if none are found, no form errors will be shown.
-   *
-   * @param {Object} $el - jQuery object to use as reference to find the form error selector.
-   * @returns {Object} jQuery object with the selector.
-   */
-  Abide.prototype.findFormError = function($el){
-    var $error = $el.siblings(this.options.formErrorSelector)
-    if(!$error.length){
-      $error = $el.parent().find(this.options.formErrorSelector);
-    }
-    return $error;
-  };
-  /**
-   * Get the first element in this order:
-   * 2. The <label> with the attribute `[for="someInputId"]`
-   * 3. The `.closest()` <label>
-   *
-   * @param {Object} $el - jQuery object to check for required attribute
+   * Checks whether or not a form element has the required attribute and if it's checked or not
+   * @param {Object} element - jQuery object to check for required attribute
    * @returns {Boolean} Boolean value depends on whether or not attribute is checked or empty
    */
   Abide.prototype.findLabel = function($el) {
-    var $label = this.$element.find('label[for="' + $el[0].id + '"]');
-    if(!$label.length){
+    if ($el.next('label').length) {
+      return $el.next('label');
+    }
+    else {
       return $el.closest('label');
     }
-    return $label;
   };
   /**
    * Adds the CSS error class as specified by the Abide settings to the label, input, and the form
-   * @param {Object} $el - jQuery object to add the class to
+   * @param {Object} element - jQuery object to add the class to
    */
-  Abide.prototype.addErrorClasses = function($el){
-    var $label = this.findLabel($el),
-        $formError = this.findFormError($el);
+  Abide.prototype.addErrorClasses = function($el) {
+    var self = this,
+        $label = self.findLabel($el),
+        $formError = $el.next(self.options.formErrorSelector) || $el.find(self.options.formErrorSelector);
 
-    if($label.length){
-      $label.addClass(this.options.labelErrorClass);
+    // label
+    if ($label) {
+      $label.addClass(self.options.labelErrorClass);
     }
-    if($formError.length){
-      $formError.addClass(this.options.formErrorClass);
+    // form error
+    if ($formError) {
+      $formError.addClass(self.options.formErrorClass);
     }
-    $el.addClass(this.options.inputErrorClass).attr('data-invalid', '');
+    // input
+    $el.addClass(self.options.inputErrorClass);
   };
   /**
    * Removes CSS error class as specified by the Abide settings from the label, input, and the form
-   * @param {Object} $el - jQuery object to remove the class from
+   * @param {Object} element - jQuery object to remove the class from
    */
-  Abide.prototype.removeErrorClasses = function($el){
-    var $label = this.findLabel($el),
-        $formError = this.findFormError($el);
-
-    if($label.length){
-      $label.removeClass(this.options.labelErrorClass);
+  Abide.prototype.removeErrorClasses = function($el) {
+    var self = this,
+        $label = self.findLabel($el),
+        $formError = $el.next(self.options.formErrorSelector) || $el.find(self.options.formErrorSelector);
+    // label
+    if ($label && $label.hasClass(self.options.labelErrorClass)) {
+      $label.removeClass(self.options.labelErrorClass);
     }
-    if($formError.length){
-      $formError.removeClass(this.options.formErrorClass);
+    // form error
+    if ($formError && $formError.hasClass(self.options.formErrorClass)) {
+      $formError.removeClass(self.options.formErrorClass);
     }
-    $el.removeClass(this.options.inputErrorClass).removeAttr('data-invalid');
+    // input
+    if ($el.hasClass(self.options.inputErrorClass)) {
+      $el.removeClass(self.options.inputErrorClass);
+    }
   };
   /**
    * Goes through a form to find inputs and proceeds to validate them in ways specific to their type
    * @fires Abide#invalid
    * @fires Abide#valid
    * @param {Object} element - jQuery object to validate, should be an HTML input
-   * @returns {Boolean} goodToGo - If the input is valid or not.
+   * @param {Object} form - jQuery object of the entire form to find the various input elements
    */
-  Abide.prototype.validateInput = function($el){
-    var clearRequire = this.requiredCheck($el),
-        validated = false,
-        customValidator = true,
-        validator = $el.attr('data-validator'),
-        equalTo = true;
+  Abide.prototype.validateInput = function($el, $form) {
+    var self = this,
+        textInput = $form.find('input[type="text"]'),
+        checkInput = $form.find('input[type="checkbox"]'),
+        label,
+        radioGroupName;
 
-    switch ($el[0].type) {
-
-      case 'radio':
-        validated = this.validateRadio($el.attr('name'));
-        break;
-
-      case 'checkbox':
-        validated = clearRequire;
-        break;
-
-      case 'select':
-      case 'select-one':
-      case 'select-multiple':
-        validated = clearRequire;
-        break;
-
-      default:
-        validated = this.validateText($el);
+    if ($el[0].type === 'text') {
+      if (!self.requiredCheck($el) || !self.validateText($el)) {
+        self.addErrorClasses($el);
+        $el.trigger('invalid.fndtn.abide', $el[0]);
+      }
+      else {
+        self.removeErrorClasses($el);
+        $el.trigger('valid.fndtn.abide', $el[0]);
+      }
     }
+    else if ($el[0].type === 'radio') {
+      radioGroupName = $el.attr('name');
+      label = $el.siblings('label');
 
-    if(validator){ customValidator = this.matchValidation($el, validator, $el.attr('required')); }
-    if($el.attr('data-equalto')){ equalTo = this.options.validators.equalTo($el); }
-
-    var goodToGo = [clearRequire, validated, customValidator, equalTo].indexOf(false) === -1,
-        message = (goodToGo ? 'valid' : 'invalid') + '.zf.abide';
-
-    this[goodToGo ? 'removeErrorClasses' : 'addErrorClasses']($el);
-
-    /**
-     * Fires when the input is done checking for validation. Event trigger is either `valid.zf.abide` or `invalid.zf.abide`
-     * Trigger includes the DOM element of the input.
-     * @event Abide#valid
-     * @event Abide#invalid
-     */
-    $el.trigger(message, $el[0]);
-
-    return goodToGo;
+      if (self.validateRadio(radioGroupName)) {
+        $(label).each(function() {
+          if ($(this).hasClass(self.options.labelErrorClass)) {
+            $(this).removeClass(self.options.labelErrorClass);
+          }
+        });
+        $el.trigger('valid.fndtn.abide', $el[0]);
+      }
+      else {
+        $(label).each(function() {
+          $(this).addClass(self.options.labelErrorClass);
+        });
+        $el.trigger('invalid.fndtn.abide', $el[0]);
+      };
+    }
+    else if ($el[0].type === 'checkbox') {
+      if (!self.requiredCheck($el)) {
+        self.addErrorClasses($el);
+        $el.trigger('invalid.fndtn.abide', $el[0]);
+      }
+      else {
+        self.removeErrorClasses($el);
+        $el.trigger('valid.fndtn.abide', $el[0]);
+      }
+    }
+    else {
+      if (!self.requiredCheck($el) || !self.validateText($el)) {
+        self.addErrorClasses($el);
+        $el.trigger('invalid.fndtn.abide', $el[0]);
+      }
+      else {
+        self.removeErrorClasses($el);
+        $el.trigger('valid.fndtn.abide', $el[0]);
+      }
+    }
   };
   /**
    * Goes through a form and if there are any invalid inputs, it will display the form error element
-   * @returns {Boolean} noError - true if no errors were detected...
-   * @fires Abide#formvalid
-   * @fires Abide#forminvalid
+   * @param {Object} element - jQuery object to validate, should be a form HTML element
    */
-  Abide.prototype.validateForm = function(){
-    var acc = [],
-        _this = this;
+  Abide.prototype.validateForm = function($form) {
+    var self = this,
+        inputs = $form.find('input'),
+        inputCount = $form.find('input').length,
+        counter = 0;
 
-    this.$inputs.each(function(){
-      acc.push(_this.validateInput($(this)));
-    });
+    while (counter < inputCount) {
+      self.validateInput($(inputs[counter]), $form);
+      counter++;
+    }
 
-    var noError = acc.indexOf(false) === -1;
-
-    this.$element.find('[data-abide-error]').css('display', (noError ? 'none' : 'block'));
-        /**
-         * Fires when the form is finished validating. Event trigger is either `formvalid.zf.abide` or `forminvalid.zf.abide`.
-         * Trigger includes the element of the form.
-         * @event Abide#formvalid
-         * @event Abide#forminvalid
-         */
-    this.$element.trigger((noError ? 'formvalid' : 'forminvalid') + '.zf.abide', [this.$element]);
-
-    return noError;
+    // what are all the things that can go wrong with a form?
+    if ($form.find('.form-error.is-visible').length || $form.find('.is-invalid-label').length) {
+      $form.find('[data-abide-error]').css('display', 'block');
+    }
+    else {
+      $form.find('[data-abide-error]').css('display', 'none');
+    }
   };
   /**
-   * Determines whether or a not a text input is valid based on the pattern specified in the attribute. If no matching pattern is found, returns true.
-   * @param {Object} $el - jQuery object to validate, should be a text input HTML element
-   * @param {String} pattern - string value of one of the RegEx patterns in Abide.options.patterns
+   * Determines whether or a not a text input is valid based on the patterns specified in the attribute
+   * @param {Object} element - jQuery object to validate, should be a text input HTML element
    * @returns {Boolean} Boolean value depends on whether or not the input value matches the pattern specified
    */
-   Abide.prototype.validateText = function($el, pattern){
-     // pattern = pattern ? pattern : $el.attr('pattern') ? $el.attr('pattern') : $el.attr('type');
-     pattern = (pattern || $el.attr('pattern') || $el.attr('type'));
-     var inputText = $el.val();
+  Abide.prototype.validateText = function($el) {
+    var self = this,
+        valid = false,
+        patternLib = this.options.patterns,
+        inputText = $($el).val(),
+        // maybe have a different way of parsing this bc people might use type
+        pattern = $($el).attr('pattern');
 
-     return inputText.length ?//if text, check if the pattern exists, if so, test it, if no text or no pattern, return true.
-            this.options.patterns.hasOwnProperty(pattern) ? this.options.patterns[pattern].test(inputText) :
-            pattern && pattern !== $el.attr('type') ? new RegExp(pattern).test(inputText) : true : true;
-   };  /**
-   * Determines whether or a not a radio input is valid based on whether or not it is required and selected
-   * @param {String} groupName - A string that specifies the name of a radio button group
-   * @returns {Boolean} Boolean value depends on whether or not at least one radio input has been selected (if it's required)
-   */
-  Abide.prototype.validateRadio = function(groupName){
-    var $group = this.$element.find(':radio[name="' + groupName + '"]'),
-        counter = [],
-        _this = this;
-
-    $group.each(function(){
-      var rdio = $(this),
-          clear = _this.requiredCheck(rdio);
-      counter.push(clear);
-      if(clear) _this.removeErrorClasses(rdio);
-    });
-
-    return counter.indexOf(false) === -1;
+    // if there's no value, then return true
+    // since required check has already been done
+    if (inputText.length === 0) {
+      return true;
+    }
+    else {
+      if (inputText.match(patternLib[pattern])) {
+        return true;
+      }
+      else {
+        return false;
+      }
+    }
   };
   /**
-   * Determines if a selected input passes a custom validation function. Multiple validations can be used, if passed to the element with `data-validator="foo bar baz"` in a space separated listed.
-   * @param {Object} $el - jQuery input element.
-   * @param {String} validators - a string of function names matching functions in the Abide.options.validators object.
-   * @param {Boolean} required - self explanatory?
-   * @returns {Boolean} - true if validations passed.
+   * Determines whether or a not a radio input is valid based on whether or not it is required and selected
+   * @param {String} group - A string that specifies the name of a radio button group
+   * @returns {Boolean} Boolean value depends on whether or not at least one radio input has been selected (if it's required)
    */
-  Abide.prototype.matchValidation = function($el, validators, required){
-    var _this = this;
-    required = required ? true : false;
-    var clear = validators.split(' ').map(function(v){
-      return _this.options.validators[v]($el, required, $el.parent());
+  Abide.prototype.validateRadio = function(group) {
+    var self = this,
+        labels = $(':radio[name="' + group + '"]').siblings('label'),
+        counter = 0;
+    // go through each radio button
+    $(':radio[name="' + group + '"]').each(function() {
+      // put them through the required checkpoint
+      if (!self.requiredCheck($(this))) {
+        // if at least one doesn't pass, add a tally to the counter
+        counter++;
+      }
+      // if at least one is checked
+      // reset the counter
+      if ($(this).is(':checked')) {
+        counter = 0;
+      }
     });
-    return clear.indexOf(false) === -1;
+
+    if (counter > 0) {
+      return false;
+    }
+    else {
+      return true;
+    }
+  };
+  Abide.prototype.matchValidation = function(val, validation) {
+
   };
   /**
    * Resets form inputs and styles
-   * @fires Abide#formreset
+   * @param {Object} $form - A jQuery object that should be an HTML form element
    */
-  Abide.prototype.resetForm = function() {
-    var $form = this.$element,
-        opts = this.options;
-
-    $('.' + opts.labelErrorClass, $form).not('small').removeClass(opts.labelErrorClass);
-    $('.' + opts.inputErrorClass, $form).not('small').removeClass(opts.inputErrorClass);
-    $(opts.formErrorSelector + '.' + opts.formErrorClass).removeClass(opts.formErrorClass);
+  Abide.prototype.resetForm = function($form) {
+    var self = this;
+    var invalidAttr = 'data-invalid';
+    // remove data attributes
+    $('[' + self.invalidAttr + ']', $form).removeAttr(invalidAttr);
+    // remove styles
+    $('.' + self.options.labelErrorClass, $form).not('small').removeClass(self.options.labelErrorClass);
+    $('.' + self.options.inputErrorClass, $form).not('small').removeClass(self.options.inputErrorClass);
+    $('.form-error.is-visible').removeClass('is-visible');
     $form.find('[data-abide-error]').css('display', 'none');
-    $(':input', $form).not(':button, :submit, :reset, :hidden, [data-abide-ignore]').val('').removeAttr('data-invalid');
-    /**
-     * Fires when the form has been reset.
-     * @event Abide#formreset
-     */
-    $form.trigger('formreset.zf.abide', [$form]);
+    $(':input', $form).not(':button, :submit, :reset, :hidden, [data-abide-ignore]').val('').removeAttr(invalidAttr);
   };
-  /**
-   * Destroys an instance of Abide.
-   * Removes error styles and classes from elements, without resetting their values.
-   */
   Abide.prototype.destroy = function(){
-    var _this = this;
-    this.$element.off('.abide')
-        .find('[data-abide-error]').css('display', 'none');
-    this.$inputs.off('.abide')
-        .each(function(){
-          _this.removeErrorClasses($(this));
-        });
-
-    Foundation.unregisterPlugin(this);
+    //TODO this...
   };
 
   Foundation.plugin(Abide, 'Abide');
@@ -11543,7 +11501,7 @@ Foundation.Motion = Motion;
 
     this._init();
 
-    Foundation.registerPlugin(this, 'Accordion');
+    Foundation.registerPlugin(this);
     Foundation.Keyboard.register('Accordion', {
       'ENTER': 'toggle',
       'SPACE': 'toggle',
@@ -11580,9 +11538,6 @@ Foundation.Motion = Motion;
   Accordion.prototype._init = function() {
     this.$element.attr('role', 'tablist');
     this.$tabs = this.$element.children('li');
-    if (this.$tabs.length == 0) {
-      this.$tabs = this.$element.children('[data-accordion-item]');
-    }
     this.$tabs.each(function(idx, el){
 
       var $el = $(el),
@@ -11630,7 +11585,7 @@ Foundation.Motion = Motion;
             _this.down($tabContent);
           }
         }).on('keydown.zf.accordion', function(e){
-          Foundation.Keyboard.handleKey(e, 'Accordion', {
+          Foundation.Keyboard.handleKey(e, _this, {
             toggle: function() {
               _this.toggle($tabContent);
             },
@@ -11685,13 +11640,13 @@ Foundation.Motion = Motion;
       .addBack()
       .parent().addClass('is-active');
 
-    // Foundation.Move(_this.options.slideSpeed, $target, function(){
+    Foundation.Move(_this.options.slideSpeed, $target, function(){
       $target.slideDown(_this.options.slideSpeed);
-    // });
+    });
 
-    // if(!firstTime){
-    //   Foundation._reflow(this.$element.attr('data-accordion'));
-    // }
+    if(!firstTime){
+      Foundation._reflow(this.$element.attr('data-accordion'));
+    }
     $('#' + $target.attr('aria-labelledby')).attr({
       'aria-expanded': true,
       'aria-selected': true
@@ -11718,9 +11673,9 @@ Foundation.Motion = Motion;
       return;
     }
 
-    // Foundation.Move(this.options.slideSpeed, $target, function(){
+    Foundation.Move(this.options.slideSpeed, $target, function(){
       $target.slideUp(_this.options.slideSpeed);
-    // });
+    });
 
     $target.attr('aria-hidden', true)
            .parent().removeClass('is-active');
@@ -11777,7 +11732,7 @@ Foundation.Motion = Motion;
 
     this._init();
 
-    Foundation.registerPlugin(this, 'AccordionMenu');
+    Foundation.registerPlugin(this);
     Foundation.Keyboard.register('AccordionMenu', {
       'ENTER': 'toggle',
       'SPACE': 'toggle',
@@ -11892,7 +11847,7 @@ Foundation.Motion = Motion;
           return;
         }
       });
-      Foundation.Keyboard.handleKey(e, 'AccordionMenu', {
+      Foundation.Keyboard.handleKey(e, _this, {
         open: function() {
           if ($target.is(':hidden')) {
             _this.down($target);
@@ -11941,13 +11896,11 @@ Foundation.Motion = Motion;
    * @param {jQuery} $target - the submenu to toggle
    */
   AccordionMenu.prototype.toggle = function($target){
-    if(!$target.is(':animated')) {
-      if (!$target.is(':hidden')) {
-        this.up($target);
-      }
-      else {
-        this.down($target);
-      }
+    if (!$target.is(':hidden')) {
+      this.up($target);
+    }
+    else {
+      this.down($target);
     }
   };
   /**
@@ -12016,7 +11969,7 @@ Foundation.Motion = Motion;
 }(jQuery, window.Foundation);
 
 /**
- * Parse JavaScript SDK v1.6.13
+ * Parse JavaScript SDK v1.6.9
  *
  * The source tree of this library can be found at
  *   https://github.com/ParsePlatform/Parse-SDK-JS
@@ -12237,8 +12190,8 @@ var config = {
   // Defaults
   IS_NODE: typeof process !== 'undefined' && !!process.versions && !!process.versions.node,
   REQUEST_ATTEMPT_LIMIT: 5,
-  SERVER_URL: 'https://api.parse.com/1',
-  VERSION: 'js' + '1.6.13',
+  SERVER_URL: 'https://api.parse.com',
+  VERSION: '1.6.9',
   APPLICATION_ID: null,
   JAVASCRIPT_KEY: null,
   MASTER_KEY: null,
@@ -14496,10 +14449,7 @@ _CoreManager2['default'].setFileController({
       'X-Parse-JavaScript-Key': _CoreManager2['default'].get('JAVASCRIPT_KEY')
     };
     var url = _CoreManager2['default'].get('SERVER_URL');
-    if (url[url.length - 1] !== '/') {
-      url += '/';
-    }
-    url += 'files/' + name;
+    url += '/1/files/' + name;
     return _CoreManager2['default'].getRESTController().ajax('POST', url, source.file, headers);
   },
 
@@ -15156,8 +15106,6 @@ var ParseObject = (function () {
       for (attr in response) {
         if ((attr === 'createdAt' || attr === 'updatedAt') && typeof response[attr] === 'string') {
           changes[attr] = (0, _parseDate2['default'])(response[attr]);
-        } else if (attr === 'ACL') {
-          changes[attr] = new _ParseACL2['default'](response[attr]);
         } else if (attr !== 'objectId') {
           changes[attr] = (0, _decode2['default'])(response[attr]);
         }
@@ -17500,7 +17448,7 @@ var ParsePromise = (function () {
   }], [{
     key: 'is',
     value: function is(promise) {
-      return promise != null && typeof promise.then === 'function';
+      return typeof promise !== 'undefined' && typeof promise.then === 'function';
     }
 
     /**
@@ -17562,8 +17510,10 @@ var ParsePromise = (function () {
      *
      * The input promises can also be specified as an array: <pre>
      *   var promises = [p1, p2, p3];
-     *   Parse.Promise.when(promises).then(function(results) {
-     *     console.log(results);  // prints [1,2,3]
+     *   Parse.Promise.when(promises).then(function(r1, r2, r3) {
+     *     console.log(r1);  // prints 1
+     *     console.log(r2);  // prints 2
+     *     console.log(r3);  // prints 3
      *   });
      * </pre>
      * @method when
@@ -17730,7 +17680,8 @@ function quote(s) {
  * Creates a new parse Parse.Query for the given Parse.Object subclass.
  * @class Parse.Query
  * @constructor
- * @param {} objectClass An instance of a subclass of Parse.Object, or a Parse className string.
+ * @param objectClass -
+ *   An instance of a subclass of Parse.Object, or a Parse className string.
  *
  * <p>Parse.Query defines a query that is used to fetch Parse.Objects. The
  * most common use case is finding all objects that match a query through the
@@ -17959,9 +17910,7 @@ var ParseQuery = (function () {
 
       return controller.find(this.className, this.toJSON(), findOptions).then(function (response) {
         return response.results.map(function (data) {
-          if (!data.className) {
-            data.className = _this.className;
-          }
+          data.className = _this.className;
           return _ParseObject2['default'].fromJSON(data);
         });
       })._thenRunCallbacks(options);
@@ -18055,9 +18004,7 @@ var ParseQuery = (function () {
         if (!objects[0]) {
           return undefined;
         }
-        if (!objects[0].className) {
-          objects[0].className = _this2.className;
-        }
+        objects[0].className = _this2.className;
         return _ParseObject2['default'].fromJSON(objects[0]);
       })._thenRunCallbacks(options);
     }
@@ -20117,11 +20064,10 @@ var ParseUser = (function (_ParseObject) {
     value: function _registerAuthenticationProvider(provider) {
       authProviders[provider.getAuthType()] = provider;
       // Synchronize the current user with the auth provider.
-      ParseUser.currentAsync().then(function (current) {
-        if (current) {
-          current._synchronizeAuthData(provider.getAuthType());
-        }
-      });
+      var current = ParseUser.current();
+      if (current) {
+        current._synchronizeAuthData(provider.getAuthType());
+      }
     }
   }, {
     key: '_logInWith',
@@ -20583,10 +20529,7 @@ var RESTController = {
   request: function request(method, path, data, options) {
     options = options || {};
     var url = _CoreManager2['default'].get('SERVER_URL');
-    if (url[url.length - 1] !== '/') {
-      url += '/';
-    }
-    url += path;
+    url += '/1/' + path;
 
     var payload = {};
     if (data && typeof data === 'object') {
@@ -20602,7 +20545,7 @@ var RESTController = {
 
     payload._ApplicationId = _CoreManager2['default'].get('APPLICATION_ID');
     payload._JavaScriptKey = _CoreManager2['default'].get('JAVASCRIPT_KEY');
-    payload._ClientVersion = _CoreManager2['default'].get('VERSION');
+    payload._ClientVersion = 'js' + _CoreManager2['default'].get('VERSION');
 
     var useMasterKey = options.useMasterKey;
     if (typeof useMasterKey === 'undefined') {
