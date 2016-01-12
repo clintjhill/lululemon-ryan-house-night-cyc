@@ -85,12 +85,24 @@ var removeBikesOption = function(){
 * value of option so that it can't be validated.
 */
 var updateClassAvailabilites = function(){
+  var bikesPerClass = eventInformation.get("bikesPerClass");
   $.each(classCounts, function(key, value){
-    if(value.count >= eventInformation.get("bikesPerClass")){
-      var original = $("select#spin-class").find("option[value="+key+"]").html();
-      // set HTML before killing the value
-      $("select#spin-class").find("option[value="+key+"]").html("SOLD OUT: " + original);
-      $("select#spin-class").find("option[value="+key+"]").val("");
+    if($("form#sign-up").length > 0){ // on the sign-up page
+      if(value.count >= bikesPerClass){
+        var original = $("select#spin-class").find("option[value="+key+"]").html();
+        // set HTML before killing the value
+        $("select#spin-class").find("option[value="+key+"]").html("SOLD OUT: " + original);
+        $("select#spin-class").find("option[value="+key+"]").val("");
+      }
+    } else { // on the home page
+      var soldOut = "&nbsp;<span class='label alert'>SOLD OUT!</span>";
+      var bikesLeft = bikesPerClass - value.count;
+      if(bikesLeft <= 0){
+        $("strong#" + key).html(0);
+        $("strong#" + key).parent().append(soldOut);
+      } else {
+        $("strong#" + key).html(bikesLeft);
+      }
     }
   });
 }

@@ -19,7 +19,5 @@ $(document).ready(function(){
       console.log('Error', err);
     }
   });
-  if($("form#sign-up").length){
-    updateClassCounts();
-  }
+  updateClassCounts();
 });

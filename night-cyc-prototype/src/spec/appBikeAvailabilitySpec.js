@@ -57,11 +57,13 @@ describe("app bike availability", function(){
     var spinClass, madisonTempe, madisonPhoenix, rpmSpin;
     beforeEach(function(){
       window.document.body.innerHTML =
+        '<form id="sign-up">' +
         '<select id="spin-class">' +
           '<option value="madison-tempe">Madison Tempe</option>' +
           '<option value="madison-phx">Madison Phoenix</option>' +
           '<option value="rpm-spin">RPM Spin</option>' +
-        '</select>';
+        '</select>' +
+        '</form>';
 
       spinClass = $("select#spin-class");
       window.classCounts = {
