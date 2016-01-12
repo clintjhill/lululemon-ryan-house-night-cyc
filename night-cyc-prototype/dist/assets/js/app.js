@@ -22374,7 +22374,7 @@ var removeBikesOption = function(){
 */
 var updateClassAvailabilites = function(){
   $.each(classCounts, function(key, value){
-    if(value.count === eventInformation.get("bikesPerClass")){
+    if(value.count >= eventInformation.get("bikesPerClass")){
       var original = $("select#spin-class").find("option[value="+key+"]").html();
       // set HTML before killing the value
       $("select#spin-class").find("option[value="+key+"]").html("SOLD OUT: " + original);

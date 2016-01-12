@@ -5,24 +5,24 @@ describe("app bike availability", function(){
     spyOn(window.eventInformation, "get").and.returnValue(60);
   });
 
-  describe("no bikes available", function(){
-
-    beforeEach(function(){
-      window.document.body.innerHTML =
-        '<a href="#spinning"></a>' +
-        '<div id="spinning"></div>' +
-        '<a href="#donating"></a>';
-      spyOnEvent($("a[href=#donating]"), "click");
-    });
-
-    it("should change section title", function(){
-      window.removeBikesOption();
-      expect($("a[href=#spinning]")).toHaveHtml("We are sold out of bikes!");
-      expect($("div#spinning")).toHaveHtml("We are sold out of bikes!");
-      expect("click").toHaveBeenTriggeredOn($("a[href=#donating]"));
-    });
-
-  });
+  // describe("no bikes available", function(){
+  //
+  //   beforeEach(function(){
+  //     window.document.body.innerHTML =
+  //       '<a href="#spinning"></a>' +
+  //       '<div id="spinning"></div>' +
+  //       '<a href="#donating"></a>';
+  //     spyOnEvent($("a[href=#donating]"), "click");
+  //   });
+  //
+  //   it("should change section title", function(){
+  //     window.removeBikesOption();
+  //     expect($("a[href=#spinning]")).toHaveHtml("We are sold out of bikes!");
+  //     expect($("div#spinning")).toHaveHtml("We are sold out of bikes!");
+  //     expect("click").toHaveBeenTriggeredOn($("a[href=#donating]"));
+  //   });
+  //
+  // });
 
   describe("all bikes available", function(){
 
