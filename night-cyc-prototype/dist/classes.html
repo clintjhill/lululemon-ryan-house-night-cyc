@@ -1,0 +1,72 @@
+
+<!doctype html>
+<html class="no-js" lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Ryan House Night Cyc!</title>
+    <link rel="stylesheet" href="/assets/css/app.css">
+    <script type="text/javascript" src="https://js.stripe.com/v2/"></script>
+
+  </head>
+  <body>
+
+    <div class="row">
+      <div class="small-12 columns">
+        <h3>Night Cyc classes</h3>
+        <p>
+          Choose a class from the dropdown to see the sign-ups.
+        </p>
+        <select class="select" id="classes" name="classes">
+          <option value="">Pick the class:</option>
+          <option value="madison-tempe-1">The Madison (Tempe) 3-4pm</option>
+          <option value="amb-bad-ass">Ambassador Bad Asses 4-5pm</option>
+          <option value="madison-phoenix">The Madison (Phoenix) 5-6pm</option>
+          <option value="rpm-spin">RPM spin 6-7pm</option>
+          <option value="madison-tempe-2">The Madison (Tempe) 7-8pm</option>
+        </select>
+      </div>
+    </div>
+    <div class="row">
+      <div class="small-12 columns">
+        <table id="signUps">
+          <tr>
+            <th></th>
+            <th>
+              Email
+            </th>
+            <th>
+              Unique ID
+            </th>
+          </tr>
+        </table>
+      </div>
+    </div>
+    
+
+    <script src="/assets/js/app.js"></script>
+    <script type="text/javascript">
+      $(document).ready(function(){
+        $("select#classes").on("change", function(evt){
+          $("table#signUps").find("tr:gt(0)").remove();
+          classInfoQuery.equalTo("spinClass", $(this).val());
+          classInfoQuery.find({
+            success: function(results){
+              if(results.length > 0){
+                for(var i = 0; i < results.length; i++){
+                  var signUp = results[i];
+                  $("table#signUps").append("<tr><td>" + parseInt(i+1,10) + "</td><td>" + signUp.get("email") + "</td><td>" + signUp.id + "</td></tr>");
+                }
+              }
+            },
+            error: function(err){
+              $("table#signUps").append("<tr><td>Sorry.</td><td>Try again.</td></tr>");
+            }
+          });
+        });
+      });
+    </script>
+  </body>
+</html>

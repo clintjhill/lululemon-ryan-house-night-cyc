@@ -35,6 +35,10 @@ get '/' do
   send_file './night-cyc-prototype/dist/index.html'
 end
 
+get '/classes' do
+  send_file './night-cyc-prototype/dist/classes.html'
+end
+
 post '/api/donation' do
   begin
     charge = Stripe::Charge.create(
