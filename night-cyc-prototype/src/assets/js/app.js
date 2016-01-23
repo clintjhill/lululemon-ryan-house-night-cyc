@@ -75,7 +75,7 @@ var showAvailableOrRemoveBikes = function(){
 }
 
 var removeBikesOption = function(){
-  $("a[href=#spinning]").html("We are sold out of bikes!");
+  $("a[href='#spinning']").html("We are sold out of bikes!");
   $("div#spinning").html("We are sold out of bikes!");
   $("a[href=#donating]").trigger("click");
 }
